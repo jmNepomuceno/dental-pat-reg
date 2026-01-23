@@ -1,0 +1,334 @@
+:root{
+  --green:#1fb34a;
+  --border:#dcdcdc;
+  --bg:#f5f7fa;
+  --card:#ffffff;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:Segoe UI, Tahoma, sans-serif;
+  font-size:13px;
+}
+
+.page{
+    width: 100%;
+    max-width:100%;
+    margin:15px auto;
+    padding:10px;
+}
+
+.container{
+  /* width:100% !important; */
+  /* max-width:1600px; */
+  padding:25px 50px !important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+              rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius:10px;
+  margin:20px;
+}
+
+.section{
+  border:1px solid var(--green);
+  margin-bottom:15px;
+  background:#fff;
+  border-radius:10px;
+}
+
+.section-header{
+  background:#eafff1;
+  padding:6px 10px;
+  font-weight:600;
+  color:#0c7a2a;
+  border-bottom:1px solid var(--green);
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+}
+
+.section-body{
+  padding:10px;
+}
+
+/* ============================
+   MAIN FLEX LAYOUT
+============================ */
+
+/* Replaces .grid */
+.section-body.grid{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+
+.section-body.grid > .form-col,
+.section-body.grid > .photo-box{
+  flex:1;
+}
+
+/* PHOTO */
+.photo-box{
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:260px;
+  background:#f1f1f1;
+}
+
+.photo-box i{
+  font-size:120px;
+  color:#0aa1c7;
+}
+
+/* ============================
+   FORM COLUMN → FLEX ROWS
+============================ */
+
+.form-col{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* Each label + input row */
+.form-col > label{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:200px;              /* label width */
+  text-align:right;
+  padding-right:10px;
+  flex-shrink:0;
+
+  /* border:1px solid red; */
+}
+
+.identifiers-col > label{
+  width:200px;
+  text-align:left;
+  padding-right:0;
+  border:none;
+  /* border:1px solid red; */
+}
+
+/* Wrap label + field into a row */
+.form-col > label,
+.form-col > input,
+.form-col > select,
+.form-col > textarea{
+  box-sizing:border-box;
+}
+
+/* Row wrapper effect */
+.identifiers-col{
+  --label-width:200px;
+}
+
+.form-col > label{
+  flex:0 0 var(--label-width);
+}
+
+/* Inputs beside labels */
+.form-col > input,
+.form-col > select,
+.form-col > textarea{
+  flex:1;
+  min-width:0;
+}
+
+/* Force row behavior */
+.form-col{
+  display:grid;
+  grid-template-columns: var(--label-width) 1fr;
+  row-gap:8px;
+  column-gap:10px;
+}
+
+.form-col > input, .form-col > select, .form-col > textarea{
+    margin-bottom:10px;
+}
+
+/* ============================
+   ADDRESS SECTION
+============================ */
+
+.address-grid{
+  display:flex;
+  gap:15px;
+}
+
+.address-grid .card{
+  flex:1;
+}
+
+.card{
+  border:1px solid var(--border);
+  padding:10px;
+  background:var(--card);
+}
+
+.card h4{
+  margin:0 0 8px 0;
+  color:var(--green);
+  font-size:13px;
+}
+
+/* ============================
+   FAMILY SECTION
+============================ */
+
+.family-grid{
+  display:flex;
+  gap:15px;
+}
+
+.family-grid .card{
+  flex:1;
+}
+
+/* ============================
+   INPUT + LABEL STYLES
+============================ */
+
+.section-body label{
+  font-size:0.78rem;
+  font-weight:600;
+  color:#2f4f2f;
+  text-transform:uppercase;
+  letter-spacing:0.03em;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea{
+  height:36px;
+  padding:6px 10px;
+  font-size:0.9rem;
+  border:1px solid #cfd8cf;
+  border-radius:4px;
+  background-color:#ffffff;
+  transition:border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+textarea{
+  min-height:60px;
+  resize:vertical;
+}
+
+/* Focus */
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+  border-color:#28a745;
+  box-shadow:0 0 0 2px rgba(40, 167, 69, 0.15);
+}
+
+/* Disabled */
+input:disabled,
+select:disabled{
+  background-color:#e9ecef;
+  color:#6c757d;
+  cursor:not-allowed;
+}
+
+/* Required asterisk ONLY */
+label.required::after{
+  content:" *";
+  color:#dc3545;
+  font-weight:bold;
+}
+
+/* ============================
+   SINGLE COLUMN SECTIONS
+============================ */
+
+.grid-single{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* ============================
+   ACTIONS
+============================ */
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  padding:10px;
+  border-top:1px solid var(--green);
+  background:#f9fffb;
+}
+
+.btn{
+  background:var(--green);
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  cursor:pointer;
+  border-radius:3px;
+}
+
+.btn.secondary{
+  background:#999;
+  color:white;
+}
+
+.btn.success{
+  background:#28a745;
+  color:white;
+}
+
+/* ============================
+   CHECKBOX
+============================ */
+
+.checkbox{
+  margin-top:10px;
+  font-size:0.85rem;
+}
+
+.checkbox input{
+  transform:scale(1.05);
+  margin-right:6px;
+}
+
+/* Highlight missing required fields */
+.field-error {
+    border: 2px solid #e74c3c !important;
+    background-color: #fff5f5;
+}
+
+/* Optional: subtle animation */
+.field-error:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    animation: fadeIn 0.3s ease;
+    border:1px solid red;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(-20px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
