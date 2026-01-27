@@ -89,6 +89,7 @@ body{
   display:flex;
   flex-direction:column;
   gap:8px;
+
 }
 
 /* Each label + input row */
@@ -117,7 +118,7 @@ body{
 .form-col > input,
 .form-col > select,
 .form-col > textarea{
-  box-sizing:border-box;
+  box-sizing:border-box !important;
 }
 
 /* Row wrapper effect */

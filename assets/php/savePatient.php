@@ -82,7 +82,7 @@ try {
     foreach ($familyMembers as $relation) {
         $fam = $patient['family'][$relation] ?? null;
         if ($fam) {
-            $sqlFam = "INSERT INTO hperson_family (
+            $sqlFam = "INSERT INTO patient_family (
                 hpatkey, relation, lastname, firstname, middlename, suffix, address, telno, phicnum, birthdate, sex, deceased
             ) VALUES (
                 :hpatkey, :relation, :lastname, :firstname, :middlename, :suffix, :address, :telno, :phicnum, :birthdate, :sex, :deceased
@@ -100,7 +100,7 @@ try {
                 ':phicnum'   => null,
                 ':birthdate' => null,
                 ':sex'       => $fam['sex'] ?? null,
-                ':deceased'  => $fam['deceased'] ?? 0
+                ':deceased' => !empty($fam['deceased']) ? 1 : 0
             ]);
         }
     }
@@ -109,7 +109,7 @@ try {
     foreach (['present','permanent'] as $addrType) {
         $addr = $patient['address'][$addrType] ?? null;
         if ($addr) {
-            $sqlAddr = "INSERT INTO hperson_address (
+            $sqlAddr = "INSERT INTO patient_addresses (
                 hpatkey, addr_type, unit, bldg, lot, subd, barangay, city, province, region, district, zipcode, country
             ) VALUES (
                 :hpatkey, :addr_type, :unit, :bldg, :lot, :subd, :barangay, :city, :province, :region, :district, :zipcode, :country
@@ -136,7 +136,7 @@ try {
     // ===================== INSERT EMERGENCY CONTACT =====================
     $emc = $patient['family']['contactPerson'] ?? null;
     if ($emc) {
-        $sqlEmc = "INSERT INTO hperson_emergency (
+        $sqlEmc = "INSERT INTO patient_emergency_contacts (
             hpatkey, patemernme, patemaddr, pattelno, relemacode
         ) VALUES (
             :hpatkey, :patemernme, :patemaddr, :pattelno, :relemacode

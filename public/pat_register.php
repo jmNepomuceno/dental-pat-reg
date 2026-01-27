@@ -91,9 +91,9 @@
                                 <label for="suffix">First Name Suffix</label>
                                 <select id="suffix">
                                     <option value="">None</option>
-                                    <option>Jr</option>
-                                    <option>Sr</option>
-                                    <option>III</option>
+                                    <option value="jr">Jr</option>
+                                    <option value="sr">Sr</option>
+                                    <option value="iii">III</option>
                                 </select>
 
                                 <label for="alias">Alias</label>
@@ -127,7 +127,12 @@
                                 <input type="number" id="day" disabled>
 
                                 <label for="gender">Gender</label>
-                                <select id="gender"><option value="">Select</option></select>
+                                <select id="gender" name="gender">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Intersex">Intersex</option>
+                                </select>
 
                                 <label for="civilStatus">Civil Status *</label>
                                 <select id="civilStatus" required>
@@ -145,7 +150,18 @@
                                 <input type="text" id="birthPlace">
 
                                 <label for="bloodType">Blood Type</label>
-                                <select id="bloodType"><option value="">Select</option></select>
+                                <select id="bloodType" name="bloodType">
+                                    <option value="">Select</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+
                             </div>
 
                             <!-- COLUMN 3 -->
@@ -201,7 +217,7 @@
                                     <select id="presentBarangay" required></select>
 
                                     <label for="presentStreet">No./Street *</label>
-                                    <input id="presentStreet" required>
+                                    <input type="text" id="presentStreet" required>
 
                                     <label for="presentDistrict">District *</label>
                                     <select id="presentDistrict" required></select>
@@ -236,7 +252,7 @@
                                     <select id="permBarangay" required></select>
 
                                     <label for="permStreet">No./Street *</label>
-                                    <input id="permStreet" required>
+                                    <input type="text" id="permStreet" required>
 
                                     <label for="permDistrict">District *</label>
                                     <select id="permDistrict" required></select>
@@ -256,7 +272,6 @@
                 <div class="container"> 
                     <div class="section">
                         <div class="section-header"><i class="fa fa-users"></i> Family Information</div>
-
                         <div class="section-body family-grid">
 
                             <!-- SPOUSE -->
@@ -264,25 +279,25 @@
                                 <h4>Spouse</h4>
                                 <div class="form-col">
                                     <label for="spouse_lastName">Last Name</label>
-                                    <input id="spouse_lastName" disabled>
+                                    <input type="text" id="spouse_lastName">
 
                                     <label for="spouse_firstName">First Name</label>
-                                    <input id="spouse_firstName" disabled>
+                                    <input type="text" id="spouse_firstName">
 
                                     <label for="spouse_middleName">Middle Name</label>
-                                    <input id="spouse_middleName" disabled>
+                                    <input type="text" id="spouse_middleName">
 
                                     <label for="spouse_address">Address</label>
-                                    <input id="spouse_address" disabled>
+                                    <input type="text" id="spouse_address">
 
                                     <label for="spouse_mobile">Mobile / Tel</label>
-                                    <input type="number" id="spouse_mobile" disabled>
+                                    <input type="text" type="number" id="spouse_mobile">
 
                                     <label for="spouse_contact">Contact</label>
-                                    <input type="number" id="spouse_contact" disabled>
+                                    <input type="text" type="number" id="spouse_contact">
 
                                     <label for="spouse_deceased">Deceased</label>
-                                    <select id="spouse_deceased" disabled></select>
+                                    <select id="spouse_deceased"></select>
                                 </div>
                             </div>
 
@@ -291,26 +306,30 @@
                                 <h4>Father</h4>
                                 <div class="form-col">
                                     <label for="father_lastName">Last Name</label>
-                                    <input id="father_lastName">
+                                    <input type="text" id="father_lastName">
 
                                     <label for="father_firstName">First Name</label>
-                                    <input id="father_firstName">
+                                    <input type="text" id="father_firstName">
 
                                     <label for="father_middleName">Middle Name</label>
-                                    <input id="father_middleName">
+                                    <input type="text" id="father_middleName">
 
                                     <label for="father_address">Address</label>
-                                    <input id="father_address">
+                                    <input type="text" id="father_address">
 
                                     <label for="father_mobile">Mobile / Tel</label>
-                                    <input type="number" id="father_mobile">
+                                    <input type="text" type="number" id="father_mobile">
 
                                     <label for="father_contact">Contact</label>
-                                    <input type="number" id="father_contact">
+                                    <input type="text" type="number" id="father_contact">
 
                                     <label for="father_deceased">Deceased</label>
-                                    <select id="father_deceased"></select>
-
+                                    <select id="father_deceased">
+                                        <option value=""></option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                    
                                     <label for="father_suffix">Suffix</label>
                                     <select id="father_suffix"></select>
                                 </div>
@@ -321,25 +340,29 @@
                                 <h4>Mother (Maiden)</h4>
                                 <div class="form-col">
                                     <label for="mother_lastName">Last Name</label>
-                                    <input id="mother_lastName">
+                                    <input type="text" id="mother_lastName">
 
                                     <label for="mother_firstName">First Name</label>
-                                    <input id="mother_firstName">
+                                    <input type="text" id="mother_firstName">
 
                                     <label for="mother_middleName">Middle Name</label>
-                                    <input id="mother_middleName">
+                                    <input type="text" id="mother_middleName">
 
                                     <label for="mother_address">Address</label>
-                                    <input id="mother_address">
+                                    <input type="text" id="mother_address">
 
                                     <label for="mother_mobile">Mobile / Tel</label>
-                                    <input type="number" id="mother_mobile">
+                                    <input type="text" type="number" id="mother_mobile">
 
                                     <label for="mother_contact">Contact</label>
-                                    <input type="number" id="mother_contact">
+                                    <input type="text" type="number" id="mother_contact">
 
                                     <label for="mother_deceased">Deceased</label>
-                                    <select id="mother_deceased"></select>
+                                    <select id="mother_deceased">
+                                        <option value=""></option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -348,13 +371,13 @@
                                 <h4>Contact Person</h4>
                                 <div class="form-col">
                                     <label for="contact_name">Contact Name</label>
-                                    <input id="contact_name">
+                                    <input type="text" id="contact_name">
 
                                     <label for="contact_address">Address</label>
-                                    <input id="contact_address">
+                                    <input type="text" id="contact_address">
 
                                     <label for="contact_mobile">Mobile / Tel</label>
-                                    <input type="number" id="contact_mobile">
+                                    <input type="text" type="number" id="contact_mobile">
 
                                     <label for="contact_relation">Relation</label>
                                     <select id="contact_relation"></select>
@@ -372,8 +395,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script src="../assets/js/pat_register.js"></script>
 </body>

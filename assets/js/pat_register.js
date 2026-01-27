@@ -10,12 +10,12 @@ $(document).ready(function() {
         $('#mssNo').val('MSS-1001');
 
         // ================= BASIC INFO =================
-        $('#lastName').val('Delos Reyes');
-        $('#firstName').val('Julius');
+        $('#lastName').val('Nepomuceno');
+        $('#firstName').val('John Marvin');
         $('#suffix').val('');
-        $('#alias').val('Jules');
-        $('#middleName').val('Estrada');
-        $('#dob').val('2000-07-07');
+        $('#alias').val('Nepo');
+        $('#middleName').val('Gomez');
+        $('#dob').val('2001-04-28');
         $('#sex').val('M').trigger('change');
 
         $('#year').val(24);
@@ -25,7 +25,7 @@ $(document).ready(function() {
         $('#gender').val('');
         $('#civilStatus').val('Single');
         $('#birthPlace').val('Quezon City');
-        $('#bloodType').val('');
+        $('#bloodType').val('A+');
         $('#nationality').val('Filipino');
         $('#religion').val('Roman Catholic');
         $('#indigenousGroup').val('No');
@@ -237,56 +237,122 @@ $(document).ready(function() {
         });
     }
 
-    function fillPatientForm(data) {
-        console.log(data)
-        // ================= IDENTIFIERS =================
-        $('#philID').val(data.philID || '');
-        $('#philDigitalID').val(data.philDigitalID || '');
-        $('#healthRecNo').val(data.healthRecNo || '');
-        $('#oldHealthRecNo').val(data.oldHealthRecNo || '');
-        $('#seniorNo').val(data.seniorNo || '');
-        $('#mssNo').val(data.mssNo || '');
+    function fillAddress(prefix, address) {
+        if (!address) return;
 
-        // ================= BASIC INFO =================
-        $('#lastName').val(data.patlast || '');
-        $('#firstName').val(data.patfirst || '');
-        $('#middleName').val(data.patmiddle || '');
-        $('#suffix').val(data.suffix || '');
-        $('#alias').val(data.alias || '');
-        $('#dob').val(data.dob || '');
-        $('#sex').val(data.sex || '');
-        $('#civilStatus').val(data.civilStatus || '');
-        $('#birthPlace').val(data.birthPlace || '');
-        $('#bloodType').val(data.bloodType || '');
-        $('#nationality').val(data.nationality || '');
-        $('#religion').val(data.religion || '');
-        $('#indigenousGroup').val(data.indigenousGroup || '');
-        $('#occupation').val(data.occupation || '');
-        $('#telephone').val(data.telephone || '');
+        const $region   = $(`#${prefix}Region`);
+        const $province = $(`#${prefix}Province`);
+        const $city     = $(`#${prefix}City`);
+        const $barangay = $(`#${prefix}Barangay`);
+        const $zip      = $(`#${prefix}Zip`);
+        const $country  = $(`#${prefix}Country`);
+        console.log(address)
+        // REGION
+        $region.val(address.region).trigger('change');
 
-        // ================= PRESENT ADDRESS =================
-        $('#presentRegion').val(data.present_region).trigger('change');
-        $('#presentStreet').val(data.present_street);
-        $('#presentZip').val(data.present_zip);
+        // wait for provinces
+        $.getJSON('../assets/php/getProvinces.php', { region_code: parseInt(address.region) }, function (provinces) {
+            let html = '<option value="">Select Province</option>';
+            provinces.forEach(p => {
+                html += `<option value="${p.province_code}">${p.province_description}</option>`;
+            });
+            $province.html(html).val(address.province);
 
-        // ================= PERMANENT ADDRESS =================
-        $('#permRegion').val(data.perm_region).trigger('change');
-        $('#permStreet').val(data.perm_street);
-        $('#permZip').val(data.perm_zip);
+            // wait for cities
+            $.getJSON('../assets/php/getCities.php', { province_code: parseInt(address.province) }, function (cities) {
+                let html = '<option value="">Select City / Municipality</option>';
+                cities.forEach(c => {
+                    html += `<option value="${c.municipality_code}">${c.municipality_description}</option>`;
+                });
+                $city.html(html).val(address.city);
 
-        // ================= FAMILY =================
-        $('#father_lastName').val(data.father_lastName || '');
-        $('#father_firstName').val(data.father_firstName || '');
-        $('#father_middleName').val(data.father_middleName || '');
-        $('#father_mobile').val(data.father_mobile || '');
+                // wait for barangays
+                $.getJSON('../assets/php/getBarangays.php', { city_code: parseInt(address.city) }, function (barangays) {
+                    let html = '<option value="">Select Barangay</option>';
+                    barangays.forEach(b => {
+                        html += `<option value="${b.barangay_code}">${b.barangay_description}</option>`;
+                    });
+                    $barangay.html(html).val(address.barangay);
 
-        $('#mother_lastName').val(data.mother_lastName || '');
-        $('#mother_firstName').val(data.mother_firstName || '');
-        $('#mother_middleName').val(data.mother_middleName || '');
-
-        $('#contact_name').val(data.contact_name || '');
-        $('#contact_mobile').val(data.contact_mobile || '');
+                    // ZIP + COUNTRY
+                    $zip.val(address.zip || '');
+                    $country.val(address.country || '');
+                });
+            });
+        });
     }
+
+    function fillPatientForm(data) {
+        console.log(data);
+
+        /* ================= IDENTIFIERS ================= */
+        $('#healthRecNo').val(data.identifiers?.healthRecNo || '');
+        $('#philDigitalID').val(data.identifiers?.philDigitalID || '');
+        $('#philID').val(data.identifiers?.philID || '');
+        $('#seniorNo').val(data.identifiers?.seniorNo || '');
+        $('#mssNo').val(data.identifiers?.mssNo || '');
+
+        /* ================= BASIC INFO ================= */
+        $('#lastName').val(data.basicInfo?.lastName || '');
+        $('#firstName').val(data.basicInfo?.firstName || '');
+        $('#middleName').val(data.basicInfo?.middleName || '');
+        $('#suffix').val(data.basicInfo?.suffix || '');
+        $('#alias').val(data.basicInfo?.alias || '');
+
+        $('#dob').val(data.basicInfo?.dob || '');
+        $('#birthPlace').val(data.basicInfo?.birthPlace || '');
+        $('#sex').val(data.basicInfo?.sex || '');
+        $('#civilStatus').val(data.basicInfo?.civilStatus || '');
+        $('#employment').val(data.basicInfo?.employment || '');
+
+        $('#nationality').val(data.basicInfo?.nationality || '');
+        $('#religion').val(data.basicInfo?.religion || '');
+        $('#indigenousGroup').val(data.basicInfo?.indigenousGroup || '');
+        $('#bloodType').val(data.basicInfo?.bloodType || '');
+        $('#email').val(data.basicInfo?.email || '');
+
+        /* ================= PRESENT ADDRESS ================= */
+        fillAddress('present', data.address?.present);
+
+        /* ================= PERMANENT ADDRESS ================= */
+        fillAddress('perm', data.address?.permanent);
+
+
+        /* ================= FAMILY ================= */
+        // father / mother / spouse are null in your object → no fill needed
+        // keep this safe for future records
+        if (data.family?.father) {
+            $('#father_lastName').val(data.family.father.lastName || '');
+            $('#father_firstName').val(data.family.father.firstName || '');
+            $('#father_middleName').val(data.family.father.middleName || '');
+            $('#father_address').val(data.family.father.address || '');
+            $('#father_mobile').val(data.family.father.mobile || '');
+        }
+
+        if (data.family?.mother) {
+            $('#mother_lastName').val(data.family.mother.lastName || '');
+            $('#mother_firstName').val(data.family.mother.firstName || '');
+            $('#mother_middleName').val(data.family.mother.middleName || '');
+            $('#mother_address').val(data.family.mother.address || '');
+            $('#mother_mobile').val(data.family.mother.mobile || '');
+        }
+
+        if (data.family?.spouse) {
+            $('#spouse_lastName').val(data.family.spouse.lastName || '');
+            $('#spouse_firstName').val(data.family.spouse.firstName || '');
+            $('#spouse_middleName').val(data.family.spouse.middleName || '');
+            $('#spouse_mobile').val(data.family.spouse.mobile || '');
+        }
+
+        /* ================= EMERGENCY CONTACT ================= */
+        if (data.family?.contactPerson) {
+            $('#contact_name').val(data.family.contactPerson.name || '');
+            $('#contact_address').val(data.family.contactPerson.address || '');
+            $('#contact_mobile').val(data.family.contactPerson.mobile || '');
+            $('#contact_relation').val(data.family.contactPerson.relation || '');
+        }
+    }
+
 
     function setViewMode(isView) {
         $('#modalPatient input, #modalPatient select').prop('disabled', isView);
@@ -460,7 +526,7 @@ $(document).ready(function() {
                     address: $('#father_address').val(),
                     mobile: $('#father_mobile').val(),
                     contact: $('#father_contact').val(),
-                    deceased: $('#father_deceased').val(),
+                    deceased: parseInt($('#father_deceased').val()),
                     suffix: $('#father_suffix').val()
                 },
                 mother: {
@@ -470,7 +536,7 @@ $(document).ready(function() {
                     address: $('#mother_address').val(),
                     mobile: $('#mother_mobile').val(),
                     contact: $('#mother_contact').val(),
-                    deceased: $('#mother_deceased').val()
+                    deceased: parseInt($('#mother_deceased').val())
                 },
                 contactPerson: {
                     name: $('#contact_name').val(),

@@ -9,7 +9,7 @@
     // $result = $soap->GetESignature($param)->GetESignatureResult;
     // echo "<pre>"; print_r($result); echo "</pre>";
 
-    $sql = "DESCRIBE patient_family";
+    $sql = "SELECT * FROM patient_family";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
@@ -19,25 +19,25 @@
     print_r($columns);
     echo '</pre>';
 
-    $sql = "DESCRIBE patient_addresses";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "DESCRIBE patient_addresses";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo '<pre>';
-    print_r($columns);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($columns);
+    // echo '</pre>';
 
-    $sql = "DESCRIBE patient_emergency_contacts";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "DESCRIBE patient_emergency_contacts";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo '<pre>';
-    print_r($columns);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($columns);
+    // echo '</pre>';
 
     // $sql = "DESCRIBE patient_employment";
     // $stmt = $pdo->prepare($sql);
