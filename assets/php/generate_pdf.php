@@ -11,11 +11,20 @@ function val($key) {
     return htmlspecialchars($_POST[$key] ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+$medHistory = $_POST['medHistory'] ?? []; // get array safely
+
+
+function checked($array, $key) {
+    return in_array($key, $array) ? '☑' : '☐';
+}
+
 // Create PDF
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 $pdf->SetCreator('BGHMC System');
 $pdf->SetAuthor('BGHMC');
 $pdf->SetTitle('Individual Patient Treatment Record');
+
+$pdf->SetFont('dejavusans', '', 10); // use DejaVu Sans for Unicode
 
 $pdf->SetMargins(10, 10, 10);
 $pdf->SetAutoPageBreak(true, 10);
@@ -116,91 +125,92 @@ $html = '
 
     <!-- I. BASIC INFORMATION -->
     <div class="card">
-    <div class="card-title">I. Basic Patient Information</div>
+        <div class="card-title">I. Basic Patient Information</div>
 
-    <table width="100%" cellpadding="4">
-    <tr>
-        <td width="33%">
-            <span class="label">Surname</span><br>
-            <span class="value">' . val('surname') . '</span>
-        </td>
-        <td width="33%">
-            <span class="label">First Name</span><br>
-            <span class="value">' . val('firstname') . '</span>
-        </td>
-        <td width="34%">
-            <span class="label">Middle Initial</span><br>
-            <span class="value">' . val('middle') . '</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span class="label">Date of Birth</span><br>
-            <span class="value">' . val('dob') . '</span>
-        </td>
-        <td>
-            <span class="label">Age</span><br>
-            <span class="value">' . val('age') . '</span>
-        </td>
-        <td>
-            <span class="label">Sex</span><br>
-            <span class="value">' . val('sex') . '</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <span class="label">Place of Birth</span><br>
-            <span class="value">' . val('birthplace') . '</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <span class="label">Address</span><br>
-            <span class="value">' . val('address') . '</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <span class="label">Occupation</span><br>
-            <span class="value">' . val('occupation') . '</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <span class="label">Parent / Guardian</span><br>
-            <span class="value">' . val('guardian') . '</span>
-        </td>
-    </tr>
-    </table>
+        <table width="100%" cellpadding="4">
+        <tr>
+            <td width="33%">
+                <span class="label">Surname</span><br>
+                <span class="value">' . val('surname') . '</span>
+            </td>
+            <td width="33%">
+                <span class="label">First Name</span><br>
+                <span class="value">' . val('firstName') . '</span>
+            </td>
+            <td width="34%">
+                <span class="label">Middle Initial</span><br>
+                <span class="value">' . val('middleInitial') . '</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="label">Date of Birth</span><br>
+                <span class="value">' . val('dob') . '</span>
+            </td>
+            <td>
+                <span class="label">Age</span><br>
+                <span class="value">' . val('age') . '</span>
+            </td>
+            <td>
+                <span class="label">Sex</span><br>
+                <span class="value">' . val('sex') . '</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <span class="label">Place of Birth</span><br>
+                <span class="value">' . val('placeOfBirth') . '</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <span class="label">Address</span><br>
+                <span class="value">' . val('address') . '</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <span class="label">Occupation</span><br>
+                <span class="value">' . val('occupation') . '</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <span class="label">Parent / Guardian</span><br>
+                <span class="value">' . val('parentGuardian') . '</span>
+            </td>
+        </tr>
+        </table>
     </div>
 
     <!-- II. MEMBERSHIP -->
     <div class="card">
-    <div class="card-title">II. Other Patient Information (Membership)</div>
+        <div class="card-title">II. Other Patient Information (Membership)</div>
 
-    <p>
-    ' . (isset($_POST['nhts']) ? '☑' : '☐') . ' NHTS-PR &nbsp;&nbsp;
-    ' . (isset($_POST['fourps']) ? '☑' : '☐') . ' 4Ps &nbsp;&nbsp;
-    ' . (isset($_POST['ip']) ? '☑' : '☐') . ' Indigenous People (IP) &nbsp;&nbsp;
-    ' . (isset($_POST['pwd']) ? '☑' : '☐') . ' PWD
-    </p>
+        <p>
+            ' . ($_POST['nhts'] === 'true' ? '☑' : '☐') . ' NHTS-PR &nbsp;&nbsp;
+            ' . ($_POST['p4ps'] === 'true' ? '☑' : '☐') . ' 4Ps &nbsp;&nbsp;
+            ' . ($_POST['ip'] === 'true' ? '☑' : '☐') . ' Indigenous People (IP) &nbsp;&nbsp;
+            ' . ($_POST['pwd'] === 'true' ? '☑' : '☐') . ' PWD
+        </p>
 
-    <table width="100%" cellpadding="4">
-    <tr>
-        <td width="33%">
-            <span class="label">PhilHealth No.</span><br>
-            <span class="value">' . val('philhealth') . '</span>
-        </td>
-        <td width="33%">
-            <span class="label">SSS No.</span><br>
-            <span class="value">' . val('sss') . '</span>
-        </td>
-        <td width="34%">
-            <span class="label">GSIS No.</span><br>
-            <span class="value">' . val('gsis') . '</span>
-        </td>
-    </tr>
-    </table>
+
+        <table width="100%" cellpadding="4">
+        <tr>
+            <td width="33%">
+                <span class="label">PhilHealth No.</span><br>
+                <span class="value">' . val('philhealth') . '</span>
+            </td>
+            <td width="33%">
+                <span class="label">SSS No.</span><br>
+                <span class="value">' . val('sss') . '</span>
+            </td>
+            <td width="34%">
+                <span class="label">GSIS No.</span><br>
+                <span class="value">' . val('gsis') . '</span>
+            </td>
+        </tr>
+        </table>
     </div>
 
     <!-- III. VITAL SIGNS -->
@@ -226,14 +236,14 @@ $html = '
     <div class="card-title">IV. Medical History</div>
 
     <p>
-    ' . (isset($_POST['allergies']) ? '☑' : '☐') . ' Allergies<br>
-    ' . (isset($_POST['hypertension']) ? '☑' : '☐') . ' Hypertension / CVA<br>
-    ' . (isset($_POST['diabetes']) ? '☑' : '☐') . ' Diabetes Mellitus<br>
-    ' . (isset($_POST['blood_disorder']) ? '☑' : '☐') . ' Blood Disorders<br>
-    ' . (isset($_POST['heart']) ? '☑' : '☐') . ' Cardiovascular Diseases<br>
-    ' . (isset($_POST['thyroid']) ? '☑' : '☐') . ' Thyroid Disorders<br>
-    ' . (isset($_POST['hepatitis']) ? '☑' : '☐') . ' Hepatitis<br>
-    ' . (isset($_POST['malignancy']) ? '☑' : '☐') . ' Malignancy
+        <?= checked($medHistory, "allergies") ?> Allergies<br>
+        <?= checked($medHistory, "hypertension") ?> Hypertension / CVA<br>
+        <?= checked($medHistory, "diabetes") ?> Diabetes Mellitus<br>
+        <?= checked($medHistory, "blood_disorder") ?> Blood Disorders<br>
+        <?= checked($medHistory, "heart") ?> Cardiovascular Diseases<br>
+        <?= checked($medHistory, "thyroid") ?> Thyroid Disorders<br>
+        <?= checked($medHistory, "hepatitis") ?> Hepatitis<br>
+        <?= checked($medHistory, "malignancy") ?> Malignancy
     </p>
     </div>
 
@@ -268,7 +278,7 @@ $html = '
                     <th>Condition</th>
                     <th></th><th></th><th></th><th></th><th></th>
                 </tr>
-
+                <tr><td>Date of Oral Examination</td><td></td><td></td><td></td><td></td><td></td></tr>
                 <tr><td>Orally Fit Child (OFC)</td><td></td><td></td><td></td><td></td><td></td></tr>
                 <tr><td>Dental Caries</td><td></td><td></td><td></td><td></td><td></td></tr>
                 <tr><td>Gingivitis</td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -353,10 +363,8 @@ $html = '
             </tr>
         </table>
     </div>
-
 ';
-
-
 
 $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->Output('patient_record.pdf', 'I');
+
