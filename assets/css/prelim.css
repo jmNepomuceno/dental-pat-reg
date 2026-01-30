@@ -125,7 +125,8 @@ input, select {
 }
 
 /* CHECKBOX MARGIN */
-.med-history-checkboxes {
+.med-history-checkboxes,
+.dietary-checkbox {
     width: auto;        /* only as wide as checkbox */
     height: auto;       /* normal height */
     margin: 0 2px;      /* tiny horizontal space around checkbox */

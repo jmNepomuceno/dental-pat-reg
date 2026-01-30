@@ -231,25 +231,25 @@
 
             <div class="checkbox-column one-column">
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox">
+                    <input class="dietary-checkbox" type="checkbox" id="sugar">
                     <span>Sugar Sweetened Beverages / Food</span>
                     <span>(Amount, Frequency &amp; Duration) ____________________________</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox">
+                    <input class="dietary-checkbox" type="checkbox" id="alcohol">
                     <span>Use of Alcohol</span>
                     <span>(Amount, Frequency &amp; Duration) ____________________________</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox">
+                    <input class="dietary-checkbox" type="checkbox" id="tobacco">
                     <span>Use of Tobacco</span>
                     <span>(Amount, Frequency &amp; Duration) ____________________________</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox">
+                    <input class="dietary-checkbox" type="checkbox" id="betel">
                     <span>Betel Nut Chewing</span>
                     <span>(Amount, Frequency &amp; Duration) ____________________________</span>
                 </div>

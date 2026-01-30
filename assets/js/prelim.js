@@ -40,10 +40,17 @@ const populate_sample = () => {
     });
 
     // ====== DIETARY HABITS ======
-    $('.checkbox-column.one-column .med-history-checkboxes').each(function(index){
+    $('.checkbox-column.one-column .dietary-checkbox').each(function () {
+        // Check the box
         $(this).prop('checked', true);
-        $(this).siblings('span:contains("Amount")').text('(2x/day)');
+
+        // Target the Amount/Frequency span (2nd span)
+        $(this)
+            .closest('.checkbox-item')
+            .find('span').eq(1)
+            .text('(2x/day)');
     });
+
 
     // ====== ORAL HEALTH ======
     // Section A: Check Present/Absent
@@ -73,6 +80,37 @@ const populate_sample = () => {
         });
     });
 }
+
+function getOralHealthChecks() {
+    let data = [];
+
+    $('.oral-health-table').first().find('tbody tr').each(function (i) {
+        let row = [];
+        $(this).find('td').slice(1).each(function () {
+            row.push($(this).text().trim());
+        });
+        data.push(row);
+    });
+
+    console.log(data)
+    return data;
+}
+
+function getOralHealthNumbers() {
+    let data = [];
+
+    $('.oral-health-table').last().find('tbody tr').each(function () {
+        let row = [];
+        $(this).find('td').slice(1).each(function () {
+            row.push($(this).text().trim());
+        });
+        data.push(row);
+    });
+
+    console.log(data)
+    return data;
+}
+
 
 $(document).ready(function () {
 
@@ -110,6 +148,17 @@ $(document).ready(function () {
             medHistory: $('.med-history-checkboxes:checked').map(function() {
                 return $(this).attr('id'); // or .val() if you assign values
             }).get(),
+
+            /* ================= DIETARY HABITS ================= */
+            dietary: $('.dietary-checkbox:checked').map(function () {
+                return this.id;
+            }).get(),
+
+             /* ================= ORAL HEALTH A ================= */
+            oralCheck: getOralHealthChecks(),
+
+            /* ================= ORAL HEALTH B ================= */
+            oralNumbers: getOralHealthNumbers()
 
             // You can continue with oral health, dietary habits, etc.
         };
