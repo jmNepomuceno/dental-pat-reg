@@ -58,62 +58,106 @@ const test = () => {
 
     // ====== ORAL HEALTH ======
     // Section A: Check Present/Absent
-    // Add your preliminary data for oral checks
-    var oralChecks = ['✔','✖','✔','✔','✖','✔','✔','✔','✖']; // for the actual conditions, skip the first row
+    // ✔ = checked first input, ✖ = checked second input
+    // Skip first row (Date of Oral Examination)
+    var oralChecks = [
+        ['✔','✖'], // Orally Fit Child (OFC)
+        ['✔','✖'], // Dental Caries
+        ['✔','✖'], // Gingivitis
+        ['✔','✖'], // Periodontal Disease
+        ['✔','✖'], // Debris
+        ['✔','✖'], // Calculus
+        ['✔','✖'], // Abnormal Growth
+        ['✔','✖'], // Cleft Lip / Palate
+        ['','']     // Others, leave blank
+    ];
 
-    // Target the first oral-health table
-    $('.oral-health-table').first().find('tbody tr').each(function(i){
-        // Skip first row (Date of Oral Examination)
+    // Section A table
+    $('#ohc-a-table tbody tr').each(function(i){
+        // Date row
         if(i === 0){
-            $(this).find('td').slice(1).text('01/27/2026'); // example date
-            return; // skip to next iteration
+            $(this).find('td').slice(1).find('input[type="date"]').val('2026-01-27');
+            return; // skip to next row
         }
 
-        // Fill the rest of the rows with ✔/✖
-        $(this).find('td').slice(1).each(function(){
-            $(this).text(oralChecks[i-1]); // subtract 1 because oralChecks starts from second row
+        var checks = oralChecks[i-1]; // skip first row
+        $(this).find('td').slice(1).each(function(colIndex){
+            var $inputs = $(this).find('input[type="checkbox"]');
+            if($inputs.length === 2){
+                $inputs.eq(0).prop('checked', checks[0] === '✔');
+                $inputs.eq(1).prop('checked', checks[1] === '✔');
+            }
         });
     });
 
 
-    // Section B: Indicate Number
+    // ====== Section B: Indicate Number ======
     var oralNumbers = [28, 28, 2, 0, 0, 30, 12, 12, 1, 0, 13];
+
     $('.oral-health-table').last().find('tbody tr').each(function(i){
         $(this).find('td').slice(1).each(function(){
-            $(this).text(oralNumbers[i]);
+            var $input = $(this).find('input');
+            if($input.attr('type') === 'number'){
+                $input.val(oralNumbers[i] || 0);
+            }
         });
     });
 }
 
+/* ================= ORAL HEALTH A ================= */
 function getOralHealthChecks() {
     let data = [];
 
+    // First table (Section A)
     $('.oral-health-table').first().find('tbody tr').each(function (i) {
         let row = [];
-        $(this).find('td').slice(1).each(function () {
-            row.push($(this).text().trim());
-        });
+
+        // Skip the first row if you want, or handle date row differently
+        if (i === 0) {
+            $(this).find('td').slice(1).each(function () {
+                row.push($(this).find('input[type="date"]').val());
+            });
+        } else {
+            $(this).find('td').slice(1).each(function () {
+                let $inputs = $(this).find('input[type="checkbox"]');
+                if ($inputs.length === 2) {
+                    // Push "✔" if checked, "✖" if not checked
+                    row.push($inputs.eq(0).prop('checked') ? '✔' : '✖'); // first checkbox
+                    row.push($inputs.eq(1).prop('checked') ? '✔' : '✖'); // second checkbox
+                } else {
+                    row.push(''); // empty cell
+                }
+            });
+        }
+
         data.push(row);
     });
 
-    console.log(data)
+    console.log('Oral Checks:', data);
     return data;
 }
 
+/* ================= ORAL HEALTH B ================= */
 function getOralHealthNumbers() {
     let data = [];
 
     $('.oral-health-table').last().find('tbody tr').each(function () {
         let row = [];
         $(this).find('td').slice(1).each(function () {
-            row.push($(this).text().trim());
+            let $input = $(this).find('input');
+            if ($input.length) {
+                row.push($input.val());
+            } else {
+                row.push('');
+            }
         });
         data.push(row);
     });
 
-    console.log(data)
+    console.log('Oral Numbers:', data);
     return data;
 }
+
 
 
 $(document).ready(function () {

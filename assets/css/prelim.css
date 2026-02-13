@@ -250,7 +250,10 @@ input, select {
     font-size: 7.5pt;
 }
 
-
+#ohc-a-table tbody tr td span{
+    display:flex;
+    flex-direction: row;
+}
 
 .btn-pdf {
     padding: 8px 18px;

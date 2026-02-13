@@ -292,7 +292,7 @@
                 A. Check (✔) if Present, (✖) if Absent
             </div>
 
-            <table class="table oral-health-table">
+            <table class="table oral-health-table" id="ohc-a-table">
                 <colgroup>
                     <col style="width: 40%">
                     <col style="width: 12%">
@@ -312,22 +312,210 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Date of Oral Examination</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Orally Fit Child (OFC)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Dental Caries</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Gingivitis</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Periodontal Disease</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Debris</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Calculus</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Abnormal Growth</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Cleft Lip / Palate</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr>
+                        <td>Date of Oral Examination</td>
+                        <td><input type="date"></td>
+                        <td><input type="date"></td>
+                        <td><input type="date"></td>
+                        <td><input type="date"></td>
+                        <td><input type="date"></td>
+                    </tr>
+                    <tr>
+                        <td>Orally Fit Child (OFC)</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dental Caries</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Gingivitis</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Periodontal Disease</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Debris</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Calculus</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Abnormal Growth</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>Cleft Lip / Palate</td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                        <td>
+                            <span><input type="checkbox"> Present</span><br>
+                            <span><input type="checkbox"> Absent</span>
+                        </td>
+                    </tr>
                     <tr>
                         <td>Others (supernumerary / mesiodens, malocclusion, etc.)</td>
-                        <td></td><td></td><td></td><td></td><td></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
                     </tr>
                 </tbody>
             </table>
-            
+
             <div class="section-subtitle">
                 B. Indicate Number
             </div>
@@ -352,22 +540,110 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>No. of Permanent Teeth Present</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Permanent Sound Teeth</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Decayed Teeth (D)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Missing Teeth (M)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Filled Teeth (F)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Total DMF Teeth</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr>
+                        <td>No. of Permanent Teeth Present</td>
+                        <td>
+                            <input type="number">
+                        </td>
+                        <td>
+                            <input type="number">
+                        </td>
+                        <td>
+                            <input type="number">
+                        </td>
+                        <td>
+                            <input type="number">
+                        </td>
+                        <td>
+                            <input type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>No. of Permanent Sound Teeth</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>No. of Decayed Teeth (D)</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>o. of Missing Teeth (M)</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>No. of Filled Teeth (F)</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>Total DMF Teeth</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
 
-                    <tr><td>No. of Temporary Teeth Present</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Temporary Sound Teeth</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Decayed Teeth (d)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>No. of Filled Teeth (f)</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>Total df Teeth</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr>
+                        <td>No. of Temporary Teeth Present</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>No. of Temporary Sound Teeth</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>No. of Decayed Teeth (d)</td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                        <td><input type="text" placeholder="Specify"></td>
+                    </tr>
+                    <tr>
+                        <td>No. of Filled Teeth (f)</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
+                    <tr>
+                        <td>Total df Teeth</td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                        <td><input type="number"></td>
+                    </tr>
                 </tbody>
-            </table>
 
+            </table>
         </div>
+
 
         
         <div style="text-align:right; margin-top:20px;">
