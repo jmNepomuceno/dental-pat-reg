@@ -157,71 +157,98 @@
 
             <div class="checkbox-column">
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="allergies" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="allergies" name="medHistory[]" value="allergies">
                     <span>Allergies</span>
-                    <span class="specify"> (Please Specify) ______________________________</span>
+                    <input type="text" name="allergies_specify" class="inline-input" placeholder="Please Specify">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="htn" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="htn" name="medHistory[]" value="hypertension">
                     <span>Hypertension / CVA</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="diabetes" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="diabetes" name="medHistory[]" value="diabetes">
                     <span>Diabetes Mellitus</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="bloodDisorders" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="bloodDisorders" name="medHistory[]" value="blood_disorders">
                     <span>Blood Disorders</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="heart" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="heart" name="medHistory[]" value="heart_disease">
                     <span>Cardiovascular / Heart Diseases</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="thyroid" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="thyroid" name="medHistory[]" value="thyroid">
                     <span>Thyroid Disorders</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="hepatitis" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="hepatitis" name="medHistory[]" value="hepatitis">
                     <span>Hepatitis</span>
-                    <span class="specify">(Please Specify Type) ______________________________</span>
+                    <input type="text" name="hepatitis_type" class="inline-input" placeholder="Specify Type">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="malignancy" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="malignancy" name="medHistory[]" value="malignancy">
                     <span>Malignancy</span>
-                    <span class="specify">(Please Specify) ______________________________</span>
+                    <input type="text" name="malignancy_specify" class="inline-input" placeholder="Please Specify">
+                </div>
+
+                <div class="checkbox-item hospitalization-item">
+                    <!-- First Line -->
+                    <div class="checkbox-main-line">
+                        <input class="med-history-checkboxes"
+                            type="checkbox"
+                            id="hospitalization"
+                            name="medHistory[]"
+                            value="hospitalization">
+
+                        <label for="hospitalization">
+                            History of Previous Hospitalization
+                        </label>
+                    </div>
+
+                    <!-- Sub Fields -->
+                    <div class="hospitalization-sub-div">
+                        <div class="hospital-line">
+                            <span>Medical (Last Admission & Cause)</span>
+                            <input type="text"
+                                name="hospital_medical"
+                                class="inline-input short-inline-input">
+                        </div>
+
+                        <div class="hospital-line">
+                            <span>Surgical (Post-Operative)</span>
+                            <input type="text"
+                                name="hospital_surgical"
+                                class="inline-input short-inline-input">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="hospitalization" name="medHistory">
-                    <span>History of Previous Hospitalization</span>
-                    <span>Medical (Last Admission &amp; Cause) ___________</span>
-                    <span>Surgical (Post-Operative) ___________</span>
-                </div>
-
-                <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="bloodTransfusion" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="bloodTransfusion" name="medHistory[]" value="blood_transfusion">
                     <span>Blood Transfusion</span>
-                    <span class="specify">(Month &amp; Year) ______________________________</span>
+                    <input type="text" name="blood_transfusion_date" class="inline-input" placeholder="Month & Year">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="tattoo" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="tattoo" name="medHistory[]" value="tattoo">
                     <span>Tattoo</span>
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="med-history-checkboxes" type="checkbox" id="othersMed" name="medHistory">
+                    <input class="med-history-checkboxes" type="checkbox" id="othersMed" name="medHistory[]" value="others">
                     <span>Others</span>
-                    <span class="specify">(Please Specify) ______________________________</span>
+                    <input type="text" name="others_medical" class="inline-input" placeholder="Please Specify">
                 </div>
+
             </div>
         </div>
 
@@ -231,28 +258,29 @@
 
             <div class="checkbox-column one-column">
                 <div class="checkbox-item">
-                    <input class="dietary-checkbox" type="checkbox" id="sugar">
+                    <input class="dietary-checkbox" type="checkbox" id="sugar" name="dietary[]" value="sugar">
                     <span>Sugar Sweetened Beverages / Food</span>
-                    <span>(Amount, Frequency &amp; Duration) ____________________________</span>
+                    <input type="text" name="sugar_details" class="inline-input" placeholder="Amount, Frequency & Duration">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="dietary-checkbox" type="checkbox" id="alcohol">
+                    <input class="dietary-checkbox" type="checkbox" id="alcohol" name="dietary[]" value="alcohol">
                     <span>Use of Alcohol</span>
-                    <span>(Amount, Frequency &amp; Duration) ____________________________</span>
+                    <input type="text" name="alcohol_details" class="inline-input" placeholder="Amount, Frequency & Duration">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="dietary-checkbox" type="checkbox" id="tobacco">
+                    <input class="dietary-checkbox" type="checkbox" id="tobacco" name="dietary[]" value="tobacco">
                     <span>Use of Tobacco</span>
-                    <span>(Amount, Frequency &amp; Duration) ____________________________</span>
+                    <input type="text" name="tobacco_details" class="inline-input" placeholder="Amount, Frequency & Duration">
                 </div>
 
                 <div class="checkbox-item">
-                    <input class="dietary-checkbox" type="checkbox" id="betel">
+                    <input class="dietary-checkbox" type="checkbox" id="betel" name="dietary[]" value="betel">
                     <span>Betel Nut Chewing</span>
-                    <span>(Amount, Frequency &amp; Duration) ____________________________</span>
+                    <input type="text" name="betel_details" class="inline-input" placeholder="Amount, Frequency & Duration">
                 </div>
+
             </div>
         </div>
 

@@ -12,7 +12,23 @@ function val($key) {
 }
 
 $medHistory = $_POST['medHistory'] ?? []; // get array safely
-$dietary = $_POST['dietary'] ?? []; // get array safely
+$medHistoryData = [];
+
+foreach ($medHistory as $item) {
+    if (isset($item['condition'])) {
+        $medHistoryData[$item['condition']] = $item;
+    }
+}
+
+
+$dietary = $_POST['dietary'] ?? [];
+$dietaryData = [];
+
+foreach ($dietary as $item) {
+    if (isset($item['condition'])) {
+        $dietaryData[$item['condition']] = $item;
+    }
+}
 $oralCheck   = $_POST['oralCheck']   ?? [];
 $oralNumbers = $_POST['oralNumbers'] ?? [];
 
@@ -54,6 +70,8 @@ $indicators = [
     'Total df Teeth'
 ];
 
+
+
 $oralNumberRows = '';
 foreach ($indicators as $rowIndex => $label) {
     $oralNumberRows .= '<tr><td>'.$label.'</td>';
@@ -63,13 +81,14 @@ foreach ($indicators as $rowIndex => $label) {
     $oralNumberRows .= '</tr>';
 }
 
-function checked($array, $key) {
-    return in_array($key, $array) ? '☑' : '☐';
+function checked($array, $value) {
+    return isset($array[$value]) ? "☑" : "☐";
 }
 
-function checked_dietary($value, $array) {
-    return in_array($value, $array) ? '☑' : '☐';
+function checked_dietary($array, $condition) {
+    return isset($array[$condition]) ? "☑" : "☐";
 }
+
 
 
 // Create PDF
@@ -200,7 +219,7 @@ $html = '
             padding: 0;
             line-height: 1.0;       /* tighter line spacing */
         }
-
+            
     </style>
 
     <!-- HEADER -->
@@ -330,26 +349,78 @@ $html = '
     <div class="card card-medical-dietary">
         <div class="card-title">IV. Medical History</div>
         <p>
-            '. checked($medHistory, "allergies") . ' Allergies<br>
-            '. checked($medHistory, "hypertension") . ' Hypertension / CVA<br>
-            '. checked($medHistory, "diabetes") . ' Diabetes Mellitus<br>
-            '. checked($medHistory, "blood_disorder") . ' Blood Disorders<br>
-            '. checked($medHistory, "heart") . ' Cardiovascular Diseases<br>
-            '. checked($medHistory, "thyroid") . ' Thyroid Disorders<br>
-            '. checked($medHistory, "hepatitis") . ' Hepatitis<br>
-            '. checked($medHistory, "malignancy") . ' Malignancy
+            '. checked($medHistoryData, "allergies") .' Allergies 
+                '. (!empty($medHistoryData["allergies"]["allergies_specify"]) 
+                    ? " - ".$medHistoryData["allergies"]["allergies_specify"] 
+                    : "") .'<br>
+
+            '. checked($medHistoryData, "hypertension") .' Hypertension / CVA<br>
+
+            '. checked($medHistoryData, "diabetes") .' Diabetes Mellitus<br>
+
+            '. checked($medHistoryData, "blood_disorders") .' Blood Disorders<br>
+
+            '. checked($medHistoryData, "heart_disease") .' Cardiovascular Diseases<br>
+
+            '. checked($medHistoryData, "thyroid") .' Thyroid Disorders<br>
+
+            '. checked($medHistoryData, "hepatitis") .' Hepatitis
+                '. (!empty($medHistoryData["hepatitis"]["hepatitis_type"]) 
+                    ? " - ".$medHistoryData["hepatitis"]["hepatitis_type"] 
+                    : "") .'<br>
+
+            '. checked($medHistoryData, "malignancy") .' Malignancy
+                '. (!empty($medHistoryData["malignancy"]["malignancy_specify"]) 
+                    ? " - ".$medHistoryData["malignancy"]["malignancy_specify"] 
+                    : "") .'<br>
+
+            '. checked($medHistoryData, "hospitalization") .' History of Previous Hospitalization
+                '. (!empty($medHistoryData["hospitalization"]["hospital_medical"]) 
+                    ? "<br>&nbsp;&nbsp;Medical: ".$medHistoryData["hospitalization"]["hospital_medical"] 
+                    : "") .'
+                '. (!empty($medHistoryData["hospitalization"]["hospital_surgical"]) 
+                    ? "<br>&nbsp;&nbsp;Surgical: ".$medHistoryData["hospitalization"]["hospital_surgical"] 
+                    : "") .'<br>
+
+            '. checked($medHistoryData, "blood_transfusion") .' Blood Transfusion
+                '. (!empty($medHistoryData["blood_transfusion"]["blood_transfusion_date"]) 
+                    ? " - ".$medHistoryData["blood_transfusion"]["blood_transfusion_date"] 
+                    : "") .'<br>
+
+            '. checked($medHistoryData, "tattoo") .' Tattoo<br>
+
+            '. checked($medHistoryData, "others") .' Others
+                '. (!empty($medHistoryData["others"]["others_medical"]) 
+                    ? " - ".$medHistoryData["others"]["others_medical"] 
+                    : "") .'
         </p>
+
     </div>
 
     <!-- V. DIETARY HABITS / SOCIAL HISTORY -->
-    <div class="card card-medical-dietary">
+    <div class="card card-medical-dietary card-dietary" style="page-break-inside: avoid;">
         <div class="card-title">V. Dietary Habits / Social History</div>
 
         <p>
-            '. checked_dietary('sugar', $dietary) . ' Sugar Sweetened Beverages / Food<br>
-            '. checked_dietary('alcohol', $dietary) . ' Use of Alcohol<br>
-            '. checked_dietary('tobacco', $dietary) . ' Use of Tobacco<br>
-            '. checked_dietary('betel', $dietary) . ' Betel Nut Chewing
+            '. checked_dietary($dietaryData, "sugar") .' Sugar Sweetened Beverages / Food
+                '. (!empty($dietaryData["sugar"]["sugar_details"]) 
+                    ? " - ".$dietaryData["sugar"]["sugar_details"] 
+                    : "") .'<br>
+
+            '. checked_dietary($dietaryData, "alcohol") .' Use of Alcohol
+                '. (!empty($dietaryData["alcohol"]["alcohol_details"]) 
+                    ? " - ".$dietaryData["alcohol"]["alcohol_details"] 
+                    : "") .'<br>
+
+            '. checked_dietary($dietaryData, "tobacco") .' Use of Tobacco
+                '. (!empty($dietaryData["tobacco"]["tobacco_details"]) 
+                    ? " - ".$dietaryData["tobacco"]["tobacco_details"] 
+                    : "") .'<br>
+
+            '. checked_dietary($dietaryData, "betel") .' Betel Nut Chewing
+                '. (!empty($dietaryData["betel"]["betel_details"]) 
+                    ? " - ".$dietaryData["betel"]["betel_details"] 
+                    : "") .'
         </p>
     </div>
 

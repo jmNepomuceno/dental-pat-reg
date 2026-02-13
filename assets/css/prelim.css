@@ -112,8 +112,49 @@ input, select {
     font-size: 11px;
 }
 
-.checkbox-item span{
+.checkbox-item .inline-input{
+    border:none;
+    border-bottom: 1px solid black;
 }
+
+/* Override only hospitalization layout */
+.hospitalization-item {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* First row (checkbox + title) */
+.checkbox-main-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Sub container */
+.hospitalization-sub-div {
+    margin-left: 20px; /* indent */
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Each line inside */
+.hospital-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Shorter underline input */
+.short-inline-input {
+    min-width: 220px;
+}
+
+/* .checkbox-item .short-inline-input{
+    border:none;
+    border-bottom: 1px solid red;
+} */
 
 /* LABELS INLINE WITHOUT SPREADING */
 .checkbox-column label {

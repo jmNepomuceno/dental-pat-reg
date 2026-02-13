@@ -1,4 +1,4 @@
-const populate_sample = () => {
+const test = () => {
     // ====== BASIC PATIENT INFO ======
     $('input[name="surname"]').val('Reyes');
     $('input[name="firstName"]').val('Juan');
@@ -29,8 +29,12 @@ const populate_sample = () => {
     });
 
     // ====== MEDICAL HISTORY ======
-    $('.med-history-checkboxes').each(function(index){
-        if(index === 0 || index === 2) $(this).prop('checked', true); // check Allergies & Diabetes
+    // Check all checkboxes
+    $('.med-history-checkboxes').prop('checked', true);
+
+    // Auto-fill all related text inputs
+    $('.checkbox-column input[type="text"]').each(function(){
+        $(this).val('Test Data');
     });
 
     $('.med-history-checkboxes').each(function(){
@@ -145,14 +149,45 @@ $(document).ready(function () {
             weight: $('#weight').val(),
 
             // Medical History (collect all checked)
-            medHistory: $('.med-history-checkboxes:checked').map(function() {
-                return $(this).attr('id'); // or .val() if you assign values
+            medHistory: $('.med-history-checkboxes:checked').map(function () {
+
+                const $item = $(this).closest('.checkbox-item');
+                const condition = $(this).val();
+
+                let data = {
+                    condition: condition
+                };
+
+                $item.find('input[type="text"]').each(function () {
+                    const name = $(this).attr('name');
+                    data[name] = $(this).val();
+                });
+
+                return data;
+
             }).get(),
 
             /* ================= DIETARY HABITS ================= */
-            dietary: $('.dietary-checkbox:checked').map(function () {
-                return this.id;
+            dietary: $('.dietary-checkbox').map(function () {
+                const $item = $(this).closest('.checkbox-item');
+                const condition = $(this).attr('id');
+
+                let data = { condition: condition };
+
+                // Collect any text inputs inside this item
+                $item.find('input[type="text"]').each(function () {
+                    const name = $(this).attr('name');
+                    data[name] = $(this).val();
+                });
+
+                // Only include if checkbox is checked (or you can include all)
+                if ($(this).is(':checked')) {
+                    return data;
+                } else {
+                    return null; // will be filtered out by .get()
+                }
             }).get(),
+
 
              /* ================= ORAL HEALTH A ================= */
             oralCheck: getOralHealthChecks(),
