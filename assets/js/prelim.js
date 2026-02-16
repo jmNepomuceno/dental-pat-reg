@@ -262,4 +262,78 @@ $(document).ready(function () {
         });
     });
 
+    $('#patientSearchInput').on('keypress', function(e){
+        if(e.which === 13){
+            $('#btnSearchPatient').click();
+        }
+    });
+
+    $('#btnSearchPatient').on('click', function(){
+        let searchValue = $('#patientSearchInput').val().trim();
+
+        if (searchValue.length < 2) {
+            $('.search-results').html(
+                '<div class="text-muted text-center py-4">Enter at least 2 characters.</div>'
+            );
+            return;
+        }
+
+        $.ajax({
+            url: '../assets/php/search_patient.php',
+            method: 'POST',
+            data: { search: searchValue },
+            dataType: 'json',
+            success: function(response){
+
+                if(response.success && response.data.length > 0){
+
+                    let html = `
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>HRN</th>
+                                    <th>Name</th>
+                                    <th>Birthdate</th>
+                                    <th>Sex</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    response.data.forEach(function(patient){
+
+                        html += `
+                            <tr class="patient-row" data-id="${patient.hpatkey}">
+                                <td>${patient.hpatcode}</td>
+                                <td>
+                                    ${patient.patlast}, 
+                                    ${patient.patfirst} 
+                                    ${patient.patmiddle ?? ''}
+                                </td>
+                                <td>${patient.patbdate ?? ''}
+                                </td>
+                                <td>${patient.patsex ?? ''}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += '</tbody></table>';
+
+                    $('.search-results').html(html);
+
+                } else {
+                    $('.search-results').html(
+                        '<div class="text-muted text-center py-4">No patients found.</div>'
+                    );
+                }
+            },
+            error: function(){
+                $('.search-results').html(
+                    '<div class="text-danger text-center py-4">Error fetching data.</div>'
+                );
+            }
+        });
+
+    });
+
 });

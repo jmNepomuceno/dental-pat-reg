@@ -9,13 +9,13 @@
     // $result = $soap->GetESignature($param)->GetESignatureResult;
     // echo "<pre>"; print_r($result); echo "</pre>";
 
-    $sql = "DESCRIBE patient_family";
+    $sql = "SELECT * from patient_family";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
-    $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo '<pre>'; print_r($columns); echo '</pre>';
+    echo '<pre>'; print_r($data); echo '</pre>';
 
     // $sql = "DESCRIBE patient_addresses";
     // $stmt = $pdo->prepare($sql);
