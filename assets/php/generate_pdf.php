@@ -47,13 +47,28 @@ $conditions = [
 ];
 
 $oralCheckRows = '';
+
 foreach ($conditions as $rowIndex => $label) {
-    $oralCheckRows .= '<tr><td>'.$label.'</td>';
+
+    $oralCheckRows .= '<tr>';
+    $oralCheckRows .= '<td>'.$label.'</td>';
+
     for ($c = 0; $c < 5; $c++) {
-        $oralCheckRows .= '<td>'.($oralCheck[$rowIndex][$c] ?? '').'</td>';
+
+        $value = $oralCheck[$rowIndex][$c] ?? '';
+
+        if (is_bool($value)) {
+            $value = $value ? '✔' : '✖';
+        }
+
+        $oralCheckRows .= '<td>'.$value.'</td>';
     }
+
     $oralCheckRows .= '</tr>';
 }
+
+
+
 
 /* ===== Section B rows ===== */
 $indicators = [
@@ -73,13 +88,21 @@ $indicators = [
 
 
 $oralNumberRows = '';
+
 foreach ($indicators as $rowIndex => $label) {
-    $oralNumberRows .= '<tr><td>'.$label.'</td>';
+
+    $oralNumberRows .= '<tr>';
+    $oralNumberRows .= '<td>'.$label.'</td>';
+
     for ($c = 0; $c < 5; $c++) {
-        $oralNumberRows .= '<td>'.($oralNumbers[$rowIndex][$c] ?? '').'</td>';
+
+        $value = $oralNumbers[$rowIndex][$c] ?? '';
+        $oralNumberRows .= '<td>'.$value.'</td>';
     }
+
     $oralNumberRows .= '</tr>';
 }
+
 
 function checked($array, $value) {
     return isset($array[$value]) ? "☑" : "☐";

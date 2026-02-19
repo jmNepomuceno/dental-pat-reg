@@ -503,49 +503,101 @@ input, select {
 }
 
 
-/* Scoped only to Save Success Modal */
+/* ============================= */
+/* Save Success Modal Styling   */
+/* ============================= */
+
 #saveSuccessModal .modal-content {
-    border-radius: 16px;
     border: none;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-    animation: fadeInScale 0.25s ease;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: saveSuccessFade 0.25s ease;
 }
 
-#saveSuccessModal .success-icon i {
-    font-size: 60px;
-    color: #28a745;
+/* Header */
+#saveSuccessModal .modal-header {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: #ffffff;
+    border-bottom: none;
+    padding: 1rem 1.5rem;
 }
 
-#saveSuccessModal h5 {
+#saveSuccessModal .modal-title {
     font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
+#saveSuccessModal .btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+#saveSuccessModal .btn-close:hover {
+    opacity: 1;
+}
+
+/* Body */
+#saveSuccessModal .modal-body {
+    font-size: 1rem;
+    padding: 2rem 1.5rem;
+    line-height: 1.6;
+}
+
+#saveSuccessModal #saveSuccessMessage {
+    position: relative;
+}
+
+/* Optional subtle success indicator line */
+#saveSuccessModal #saveSuccessMessage::before {
+    content: "✔";
+    display: block;
+    font-size: 40px;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+#saveSuccessModal .modal-footer {
+    border-top: none;
+    padding: 1.25rem 1.5rem 1.75rem;
+}
+
+/* Buttons */
 #saveSuccessModal .btn {
-    min-width: 150px;
+    min-width: 160px;
     font-weight: 500;
     border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
+#saveSuccessModal .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Warning button enhancement */
 #saveSuccessModal .btn-warning {
     background: linear-gradient(135deg, #ffc107, #e0a800);
     border: none;
 }
 
+/* Success button enhancement */
 #saveSuccessModal .btn-success {
     background: linear-gradient(135deg, #28a745, #1e7e34);
     border: none;
 }
 
-#saveSuccessModal .btn:hover {
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
+/* Secondary button polish */
+#saveSuccessModal .btn-secondary {
+    border-radius: 8px;
 }
 
-/* Smooth pop animation */
-@keyframes fadeInScale {
+/* Modal open animation */
+@keyframes saveSuccessFade {
     from {
         opacity: 0;
-        transform: scale(0.95);
+        transform: scale(0.96);
     }
     to {
         opacity: 1;

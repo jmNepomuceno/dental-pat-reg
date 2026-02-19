@@ -668,7 +668,8 @@
 
                 
                 <div style="text-align:right; margin-top:20px;" id="pdfActionWrapper">
-                    <button id="btnGeneratePDF" class="btn-pdf" style="display:none;">
+                    <!-- <button id="btnGenerateAfterWaiver" class="btn-pdf" style="display:none;"> -->
+                    <button id="btnGenerateAfterWaiver" class="btn-pdf" >
                         Generate Printable PDF
                     </button>
                     <button id="btnSaveData" class="btn-pdf">

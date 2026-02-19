@@ -145,81 +145,93 @@ function getOralHealthChecks() {
 
     let data = [];
 
-    $('.oral-health-table').first().find('tbody tr').each(function (i) {
+    $('.oral-health-table').first().find('tbody tr').each(function () {
 
-        // =====================
-        // DATE ROW
-        // =====================
-        if (i === 0) {
+        let rowData = [];
 
-            let firstDate = null;
+        // Only read EXACTLY 5 consultation columns
+        $(this).find('td').slice(1, 6).each(function () {
 
-            $(this).find('td').slice(1).each(function () {
-                let val = $(this).find('input[type="date"]').val();
-                if (!firstDate && val) {
-                    firstDate = val;
+            let $dateInput = $(this).find('input[type="date"]');
+            let $checkboxes = $(this).find('input[type="checkbox"]');
+            let $textInput = $(this).find('input[type="text"]');
+
+            // DATE
+            if ($dateInput.length) {
+                rowData.push($dateInput.val());
+                console.log($dateInput.val())
+            }
+            // CHECKBOX (Present / Absent)
+            else if ($checkboxes.length === 2) {
+
+                if ($checkboxes.eq(0).prop('checked')) {
+                    rowData.push(true);
+                } 
+                else if ($checkboxes.eq(1).prop('checked')) {
+                    rowData.push(false);
+                } 
+                else {
+                    rowData.push('');
                 }
-            });
-
-            if (firstDate) {
-                data.push(firstDate); // 🔥 push directly, not inside array
             }
 
-        } else {
+            // TEXT (Others row)
+            else if ($textInput.length) {
+                rowData.push($textInput.val());
+            }
 
-            // =====================
-            // CHECKBOX ROWS
-            // =====================
-            $(this).find('td').slice(1).each(function () {
+            else {
+                rowData.push('');
+            }
 
-                let $checkboxes = $(this).find('input[type="checkbox"]');
+        });
 
-                if ($checkboxes.length === 2) {
-
-                    let presentChecked = $checkboxes.eq(0).prop('checked');
-                    let absentChecked  = $checkboxes.eq(1).prop('checked');
-
-                    if (presentChecked) {
-                        data.push(true); // 🔥 direct push
-                    }
-                    else if (absentChecked) {
-                        data.push(false); // 🔥 direct push
-                    }
-
-                }
-
-            });
-
+        // Ensure always exactly 5 columns
+        while (rowData.length < 5) {
+            rowData.push('');
         }
+
+        data.push(rowData);
 
     });
 
-    console.log('Final Oral Checks:', data);
+    console.log('Oral Checks Matrix FIXED:', data);
     return data;
 }
 
 
-/* ================= ORAL HEALTH B ================= */
+
+
 function getOralHealthNumbers() {
 
     let data = [];
 
     $('.oral-health-table').last().find('tbody tr').each(function () {
 
+        let rowData = [];
+
         $(this).find('td').slice(1).each(function () {
 
             let val = $(this).find('input').val();
-
-            if (val !== undefined && val !== null && val !== '') {
-                data.push(Number(val)); // 🔥 push as number, not string
-            }
+            rowData.push(val !== '' ? Number(val) : '');
 
         });
 
+        data.push(rowData);
+
     });
 
-    console.log('Oral Numbers:', data);
+    console.log('Oral Numbers Matrix:', data);
     return data;
+}
+
+
+
+// =========================
+// Function to collect form data
+// =========================
+function cleanArray(arr) {
+    return arr.filter(val => val !== null && val !== '' && val !== undefined);
 }
 
 
@@ -281,12 +293,6 @@ function clearWaiverForm() {
 
 
 
-// =========================
-// Function to collect form data
-// =========================
-function cleanArray(arr) {
-    return arr.filter(val => val !== null && val !== '' && val !== undefined);
-}
 
 function clearDentalForm() {
     // Clear vitals
@@ -373,11 +379,12 @@ function collectFormData() {
                 data[$(this).attr('name')] = $(this).val();
             });
             return data;
-        }).get().filter(Boolean), // remove nulls
+        }).get().filter(Boolean), // remove nulls   
 
         // Oral Health
-        oralCheck: cleanArray(getOralHealthChecks()),
-        oralNumbers: cleanArray(getOralHealthNumbers())
+        oralCheck: getOralHealthChecks(),
+        oralNumbers: getOralHealthNumbers()
+
     };
 }
 
@@ -389,25 +396,25 @@ $(document).ready(function () {
     // =========================
     // Generate PDF Button
     // =========================
-    $('#btnGeneratePDF').on('click', function () {
-        const formData = collectFormData();
-        console.log('Generating PDF with data:', formData);
+    // $('#btnGeneratePDF').on('click', function () {
+    //     const formData = collectFormData();
+    //     console.log('Generating PDF with data:', formData);
 
-        $.ajax({
-            url: '../assets/php/generate_pdf.php',
-            type: 'POST',
-            data: formData,
-            xhrFields: { responseType: 'blob' }, // for PDF
-            success: function (response) {
-                const blob = new Blob([response], { type: 'application/pdf' });
-                const url = window.URL.createObjectURL(blob);
-                window.open(url, '_blank');
-            },
-            error: function () {
-                alert('Failed to generate PDF');
-            }
-        });
-    });
+    //     $.ajax({
+    //         url: '../assets/php/generate_pdf.php',
+    //         type: 'POST',
+    //         data: formData,
+    //         xhrFields: { responseType: 'blob' }, // for PDF
+    //         success: function (response) {
+    //             const blob = new Blob([response], { type: 'application/pdf' });
+    //             const url = window.URL.createObjectURL(blob);
+    //             window.open(url, '_blank');
+    //         },
+    //         error: function () {
+    //             alert('Failed to generate PDF');
+    //         }
+    //     });
+    // });
 
     // =========================
     // Save Data Button
@@ -586,7 +593,7 @@ $(document).ready(function () {
     $('#btnGenerateAfterWaiver').on('click', function(){
 
         const formData = collectFormData();
-
+        console.log(formData)
         $.ajax({
             url: '../assets/php/generate_pdf.php',
             type: 'POST',
@@ -650,7 +657,7 @@ $(document).ready(function () {
 
     $('#btnSearchPatient').on('click', function(){
         let searchValue = $('#patientSearchInput').val().trim();
-
+        $('.search-results').html("")
         if (searchValue.length < 2) {
             $('.search-results').html(
                 '<div class="text-muted text-center py-4">Enter at least 2 characters.</div>'
@@ -832,7 +839,13 @@ $(document).ready(function () {
                     const $td = $(this).find('td').eq(1);
                     const $checkboxes = $td.find('input[type="checkbox"]');
                     // Set date
-                    $('#ohc-a-table tbody tr').first().find('td').eq(1).text(oralCheck[0]);
+                    $('#ohc-a-table tbody tr')
+                        .first()
+                        .find('td')
+                        .eq(1)
+                        .find('input[type="date"]')
+                        .val(oralCheck[0]);
+
 
                     if($checkboxes.length === 2) {
                         $checkboxes.eq(0).prop('checked', oralCheck[i] === true || oralCheck[i] === 'true');
