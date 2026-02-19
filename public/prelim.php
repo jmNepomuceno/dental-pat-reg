@@ -772,17 +772,18 @@
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <strong>PANGALAN:</strong>
-                                <span id="waiverPatientName" class="ms-2 border-bottom d-inline-block w-75"></span>
+                                <input type="text" name="patient_name" id="waiverPatientName" class="ms-2 border-bottom d-inline-block w-75"/>
+                                <!-- <span id="waiverPatientName" class="ms-2 border-bottom d-inline-block w-75"></span> -->
                             </div>
                             <div class="col-md-6">
                                 <strong>EDAD:</strong>
-                                <span id="waiverAge" class="ms-2 border-bottom d-inline-block w-50"></span>
+                                <input type="text" name="age" id="waiverAge" class="ms-2 border-bottom d-inline-block w-50"/>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <strong>ADDRESS:</strong>
-                            <span id="waiverAddress" class="ms-2 border-bottom d-inline-block w-75"></span>
+                            <input type="text" name="address" id="waiverAddress" class="ms-2 border-bottom d-inline-block w-75"/>
                         </div>
 
                         <hr>

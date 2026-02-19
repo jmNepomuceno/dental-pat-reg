@@ -100,9 +100,9 @@ const test = () => {
 
 const test2 = () => {
     // ====== PATIENT INFO ======
-    $('#waiverPatientName').text('Juan D Reyes');
-    $('#waiverAge').text('11'); // example age
-    $('#waiverAddress').text('123 Rizal Street, Balanga, Bataan');
+    $('#waiverPatientName').val('Juan D Reyes');
+    $('#waiverAge').val('11'); // example age
+    $('#waiverAddress').val('123 Rizal Street, Balanga, Bataan');
 
     // Hidden patient_id (for backend)
     $('#waiverPatientId').val(13); // set a test patient ID
@@ -269,9 +269,9 @@ function clearWaiverForm() {
     $('#waiverHpatcode').val('');
 
     // 6️⃣ Clear patient display info (the spans)
-    $('#waiverPatientName').text('');
-    $('#waiverAge').text('');
-    $('#waiverAddress').text('');
+    $('#waiverPatientName').val('');
+    $('#waiverAge').val('');
+    $('#waiverAddress').val('');
 
     // 7️⃣ Clear agreement checkbox
     $('#waiverAgree').prop('checked', false);
@@ -463,12 +463,12 @@ $(document).ready(function () {
 
         $('#saveSuccessModal').on('hidden.bs.modal', function () {
 
-            $('#waiverPatientName').text(
+            $('#waiverPatientName').val(
                 $('#surname').val() + ', ' + $('#firstName').val()
             );
 
-            $('#waiverAge').text($('#age').val());
-            $('#waiverAddress').text($('#address').val());
+            $('#waiverAge').val($('#age').val());
+            $('#waiverAddress').val($('#address').val());
 
             let today = new Date().toISOString().split('T')[0];
 
@@ -517,6 +517,7 @@ $(document).ready(function () {
         dataObj['witness_name'] = $('input[name="witness_name"]').val();
 
         console.log(dataObj)
+        console.log(formData)
         $.ajax({
             url: '../assets/php/save_waiver.php',
             type: 'POST',
@@ -524,27 +525,54 @@ $(document).ready(function () {
             success: function(res){
                 let response = typeof res === 'string' ? JSON.parse(res) : res;
                 if(response.success){
-                    $('#waiverModal').modal('hide');
+                    let formData = new FormData(document.getElementById('waiverForm'));
 
-                    // Update modal message
-                    $('#saveSuccessMessage').html(`
-                        Waiver completed successfully.<br><br>
-                        You may now generate the Patient Treatment Record Form.
-                    `);
+                    formData.append('hpatcode', window.savedHpatcode);
+                    formData.append('age', $('#waiverAge').val());
+                    formData.append('address', $('#waiverAddress').val());
 
-                    // Hide Complete Waiver button
-                    $('#btnOpenWaiver').addClass('d-none');
+                    // Log all formData key/value pairs
+                    console.log(formData);
+                    for (let [key, value] of formData.entries()) {
+                        console.log(key, ':', value);
+                    }
+                    // After saving waiver, generate waiver PDF
+                    $.ajax({
+                        url: '../assets/php/generate_waiver_pdf.php',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            xhrFields: { responseType: 'blob' },
+                            success: function(pdfResponse) {
 
-                    // Show Generate button
-                    $('#btnGenerateAfterWaiver')
-                        .removeClass('d-none')
-                        .text('Generate PDF for Patient Treatment Record Form');
+                            const blob = new Blob([pdfResponse], { type: 'application/pdf' });
+                            const url = window.URL.createObjectURL(blob);
+                            window.open(url, '_blank');
 
-                    // Reopen modal
-                    $('#saveSuccessModal').modal('show');
+                            // Now continue your modal logic
+                            $('#waiverModal').modal('hide');
 
+                            $('#saveSuccessMessage').html(`
+                                Waiver completed successfully.<br><br>
+                                You may now generate the Patient Treatment Record Form.
+                            `);
 
-                } else {
+                            $('#btnOpenWaiver').addClass('d-none');
+
+                            $('#btnGenerateAfterWaiver')
+                                .removeClass('d-none')
+                                .text('Generate PDF for Patient Treatment Record Form');
+
+                            $('#saveSuccessModal').modal('show');
+                        },
+                        error: function(){
+                            alert('Waiver saved but failed to generate Waiver PDF.');
+                        }
+                    });
+
+                }
+                else {
                     alert(response.message || 'Failed to save waiver.');
                 }
             },
