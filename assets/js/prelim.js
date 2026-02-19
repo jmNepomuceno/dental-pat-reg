@@ -668,34 +668,53 @@ $(document).ready(function () {
                 if(response.success && response.data.length > 0){
 
                     let html = `
-                        <table class="table table-hover">
-                            <thead>
+                        <table class="table table-hover table-sm align-middle mb-0 custom-patient-table">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>HRN</th>
-                                    <th>Name</th>
-                                    <th>Birthdate</th>
-                                    <th>Sex</th>
+                                    <th class="text-muted small">HRN</th>
+                                    <th class="text-muted small">Patient Name</th>
+                                    <th class="text-muted small">Birthdate</th>
+                                    <th class="text-muted small text-center">Sex</th>
                                 </tr>
                             </thead>
                             <tbody>
                     `;
 
                     response.data.forEach(function(patient){
+
                         let patientStr = JSON.stringify(patient).replace(/'/g, "&apos;");
+
+                        let fullName = `
+                            <div class="fw-semibold">
+                                ${patient.patlast}, ${patient.patfirst}
+                            </div>
+                            <div class="text-muted small">
+                                ${patient.patmiddle ?? ''}
+                            </div>
+                        `;
+
+                        console.log(patient.patsex)
+                        
+                        let sexBadge = patient.patsex === 'M'
+                            ? `<span class="badge bg-primary-subtle text-primary px-3">Male</span>`
+                            : `<span class="badge bg-danger-subtle text-danger px-3">Female</span>`;
 
                         html += `
                             <tr class="patient-row" data-patient='${patientStr}'>
-                                <td>${patient.hpatcode}</td>
-                                <td>
-                                    ${patient.patlast}, 
-                                    ${patient.patfirst} 
-                                    ${patient.patmiddle ?? ''}
+                                <td class="fw-semibold text-primary">
+                                    ${patient.hpatcode}
                                 </td>
-                                <td>${patient.patbdate ?? ''}</td>
-                                <td>${patient.patsex ?? ''}</td>
+                                <td>${fullName}</td>
+                                <td class="text-muted">
+                                    ${patient.patbdate ?? ''}
+                                </td>
+                                <td class="text-center">
+                                    ${sexBadge}
+                                </td>
                             </tr>
                         `;
                     });
+
 
                     html += '</tbody></table>';
 

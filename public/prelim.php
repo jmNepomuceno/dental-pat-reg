@@ -700,6 +700,9 @@
 
                 <!-- Search Input -->
                 <div class="input-group mb-3">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
                     <input 
                         type="text" 
                         class="form-control" 

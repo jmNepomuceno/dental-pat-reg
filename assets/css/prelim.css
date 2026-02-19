@@ -396,3 +396,159 @@ input, select {
 #waiverModal img {
     object-fit: contain;
 }
+
+
+/* Modal polish */
+#searchPatientModal .modal-content {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border: none;
+}
+
+/* Header */
+#searchPatientModal .modal-header {
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    color: #fff;
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+#searchPatientModal .modal-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#searchPatientModal .btn-close {
+    filter: invert(1);
+}
+
+/* Search Input */
+#searchPatientModal .input-group input {
+    border-radius: 8px 0 0 8px;
+}
+
+#searchPatientModal .input-group .btn {
+    border-radius: 0 8px 8px 0;
+    font-weight: 500;
+}
+
+/* Results container */
+.search-results {
+    max-height: 350px;
+    overflow-y: auto;
+    /* border-radius: 8px; */
+    border: 1px solid #dee2e6;
+}
+
+/* Table enhancements */
+.search-results table {
+    margin-bottom: 0;
+}
+
+.search-results thead {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.search-results th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.patient-row {
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+/* .patient-row:hover {
+    background-color: #e9f2ff;
+    transform: scale(1.01);
+} */
+
+/* Empty state */
+.search-results .text-muted {
+    font-style: italic;
+}
+
+
+.custom-patient-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.custom-patient-table th {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.patient-row {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* .patient-row:hover {
+    background-color: #f1f7ff;
+    transform: scale(1.01);
+} */
+
+.patient-row td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+/* Scoped only to Save Success Modal */
+#saveSuccessModal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    animation: fadeInScale 0.25s ease;
+}
+
+#saveSuccessModal .success-icon i {
+    font-size: 60px;
+    color: #28a745;
+}
+
+#saveSuccessModal h5 {
+    font-weight: 600;
+}
+
+#saveSuccessModal .btn {
+    min-width: 150px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+#saveSuccessModal .btn-warning {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    border: none;
+}
+
+#saveSuccessModal .btn-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    border: none;
+}
+
+#saveSuccessModal .btn:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+/* Smooth pop animation */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
