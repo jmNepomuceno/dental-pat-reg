@@ -282,12 +282,31 @@ input, select {
 }
 
 .btn-pdf {
-    padding: 8px 18px;
-    font-size: 13px;
-    border: 1px solid #000;
-    background: #fff;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #007bff;
+    background: #007bff;
+    color: #fff;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: 5px;
 }
+
+.btn-pdf:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-pdf:disabled,
+.btn-pdf.disabled {
+    background: #e0e0e0;
+    border-color: #bdbdbd;
+    color: #888;
+    cursor: not-allowed;
+}
+
 
 .form-row {
     display: grid;
@@ -367,4 +386,13 @@ input, select {
 }
 .patient-row:hover {
     background-color: #f1f5ff !important;
+}
+
+#waiverModal .modal-content {
+    padding:30px !important;
+    z-index: 2000 !important;
+}
+
+#waiverModal img {
+    object-fit: contain;
 }

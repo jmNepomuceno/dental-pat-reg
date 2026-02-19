@@ -14,20 +14,26 @@ $search = trim($_POST['search']);
 
 try {
 
+    // Fetch main patient info
     $sql = "SELECT 
-                hpatkey,
-                hpatcode,
-                patlast,
-                patfirst,
-                patmiddle,
-                patbdate,
-                patsex
-            FROM hperson
+                h.hpatkey,
+                h.hpatcode,
+                h.patlast,
+                h.patfirst,
+                h.patmiddle,
+                h.patsuffix,
+                h.patalias,
+                h.patbdate,
+                h.patsex,
+                h.patcstat AS status,
+                h.patbplace,
+                h.patempstat AS occupation
+            FROM hperson h
             WHERE 
-                patlast LIKE :search
-                OR patfirst LIKE :search
-                OR hpatcode LIKE :search
-            ORDER BY patlast ASC
+                h.patlast LIKE :search
+                OR h.patfirst LIKE :search
+                OR h.hpatcode LIKE :search
+            ORDER BY h.patlast ASC
             LIMIT 20";
 
     $stmt = $pdo->prepare($sql);
@@ -37,13 +43,59 @@ try {
 
     $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Fetch addresses, family, and emergency contacts for each patient
+    foreach ($patients as &$p) {
+
+        // Address (PRESENT) with joins to get descriptions
+        $stmtAddr = $pdo->prepare("
+            SELECT a.*, 
+                   r.region_description AS region_name,
+                   pr.province_description AS province_name,
+                   c.municipality_description AS city_name,
+                   b.barangay_description AS barangay_name
+            FROM patient_addresses a
+            LEFT JOIN regions r ON a.region = r.region_code
+            LEFT JOIN provinces pr ON a.province = pr.province_code
+            LEFT JOIN city c ON a.city = c.municipality_code
+            LEFT JOIN barangay b ON a.barangay = b.barangay_code
+            WHERE a.hpatkey = :hpatkey AND a.addr_type = 'PRESENT'
+            LIMIT 1
+        ");
+        $stmtAddr->execute([':hpatkey' => $p['hpatkey']]);
+        $p['address'] = $stmtAddr->fetch(PDO::FETCH_ASSOC);
+
+        // Family (FATHER, MOTHER, GUARDIAN)
+        $stmtFam = $pdo->prepare("SELECT * FROM patient_family WHERE hpatkey = :hpatkey");
+        $stmtFam->execute([':hpatkey' => $p['hpatkey']]);
+        $family = $stmtFam->fetchAll(PDO::FETCH_ASSOC);
+
+        $p['family'] = [];
+        foreach ($family as $f) {
+            $rel = strtolower($f['relation']); // e.g., father, mother, guardian
+            $p['family'][$rel] = $f;
+        }
+
+        // Emergency Contact
+        $stmtEmc = $pdo->prepare("SELECT * FROM patient_emergency_contacts WHERE hpatkey = :hpatkey LIMIT 1");
+        $stmtEmc->execute([':hpatkey' => $p['hpatkey']]);
+        $p['emergency_contact'] = $stmtEmc->fetch(PDO::FETCH_ASSOC);
+
+        // Employment 
+        $stmtEmp = $pdo->prepare("SELECT * FROM patient_employment WHERE hpatkey = :hpatkey LIMIT 1");
+        $stmtEmp->execute([':hpatkey' => $p['hpatkey']]);
+        $p['employment'] = $stmtEmp->fetch(PDO::FETCH_ASSOC);
+
+        $stmtDental = $pdo->prepare("SELECT * FROM dental_patients WHERE hpatcode = :hpatcode LIMIT 1");
+        $stmtDental->execute([':hpatcode' => $p['hpatcode']]); // assuming hpatkey = patient_id in dental_patients
+        $p['dental'] = $stmtDental->fetch(PDO::FETCH_ASSOC); // null if no record
+    }
+
     echo json_encode([
         'success' => true,
         'data' => $patients
     ]);
 
 } catch (PDOException $e) {
-
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()

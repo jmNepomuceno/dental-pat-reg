@@ -9,10 +9,10 @@
     // $result = $soap->GetESignature($param)->GetESignatureResult;
     // echo "<pre>"; print_r($result); echo "</pre>";
 
-    $sql = "SELECT * from patient_family";
+    $sql = "SELECT * from dental_patients";
+    $sql = "DESCRIBE dental_waivers";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo '<pre>'; print_r($data); echo '</pre>';
