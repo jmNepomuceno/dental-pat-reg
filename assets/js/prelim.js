@@ -142,90 +142,105 @@ const test2 = () => {
 
 
 function getOralHealthChecks() {
-
     let data = [];
 
     $('.oral-health-table').first().find('tbody tr').each(function () {
-
-        let rowData = [];
-
-        // Only read EXACTLY 5 consultation columns
         $(this).find('td').slice(1, 6).each(function () {
-
             let $dateInput = $(this).find('input[type="date"]');
             let $checkboxes = $(this).find('input[type="checkbox"]');
             let $textInput = $(this).find('input[type="text"]');
 
-            // DATE
-            if ($dateInput.length) {
-                rowData.push($dateInput.val());
-                console.log($dateInput.val())
+            if ($dateInput.length && $dateInput.val() !== '') {
+                data.push($dateInput.val());
+            } else if ($checkboxes.length === 2) {
+                if ($checkboxes.eq(0).prop('checked')) data.push(true);
+                else if ($checkboxes.eq(1).prop('checked')) data.push(false);
+            } else if ($textInput.length && $textInput.val() !== '') {
+                data.push($textInput.val());
             }
-            // CHECKBOX (Present / Absent)
-            else if ($checkboxes.length === 2) {
-
-                if ($checkboxes.eq(0).prop('checked')) {
-                    rowData.push(true);
-                } 
-                else if ($checkboxes.eq(1).prop('checked')) {
-                    rowData.push(false);
-                } 
-                else {
-                    rowData.push('');
-                }
-            }
-
-            // TEXT (Others row)
-            else if ($textInput.length) {
-                rowData.push($textInput.val());
-            }
-
-            else {
-                rowData.push('');
-            }
-
+            // skip empty cells
         });
-
-        // Ensure always exactly 5 columns
-        while (rowData.length < 5) {
-            rowData.push('');
-        }
-
-        data.push(rowData);
-
     });
 
-    console.log('Oral Checks Matrix FIXED:', data);
+    console.log('Flattened Oral Checks:', data);
     return data;
 }
 
-
-
-
 function getOralHealthNumbers() {
-
     let data = [];
 
     $('.oral-health-table').last().find('tbody tr').each(function () {
-
-        let rowData = [];
-
         $(this).find('td').slice(1).each(function () {
-
             let val = $(this).find('input').val();
-            rowData.push(val !== '' ? Number(val) : '');
-
+            if (val !== '') data.push(Number(val));
         });
-
-        data.push(rowData);
-
     });
 
-    console.log('Oral Numbers Matrix:', data);
+    console.log('Flattened Oral Numbers:', data);
     return data;
 }
 
 
+function collectFormData() {
+    return {
+        hpatcode: $('#hpatcode').val(), // <- added this
+        // Basic Information
+        surname: $('input[name="surname"]').val(),
+        firstName: $('input[name="firstName"]').val(),
+        middleInitial: $('input[name="middleInitial"]').val(),
+        dob: $('input[name="dob"]').val(),
+        age: $('input[name="age"]').val(),
+        sex: $('select[name="sex"]').val(),
+        status: $('select[name="status"]').val(),
+        placeOfBirth: $('input[name="placeOfBirth"]').val(),
+        address: $('input[name="address"]').val(),
+        occupation: $('input[name="occupation"]').val(),
+        parentGuardian: $('input[name="parentGuardian"]').val(),
+
+        // Membership / IDs
+        nhts: $('#nhts').is(':checked'),
+        p4ps: $('#4ps').is(':checked'),
+        ip: $('#ip').is(':checked'),
+        pwd: $('#pwd').is(':checked'),
+        philhealth: $('#philhealth').val(),
+        sss: $('#sss').val(),
+        gsis: $('#gsis').val(),
+
+        // Vital Signs
+        bp: $('#bp').val(),
+        pulse: $('#pulse').val(),
+        temp: $('#temp').val(),
+        weight: $('#weight').val(),
+
+        // Medical History
+        medHistory: $('.med-history-checkboxes:checked').map(function () {
+            const $item = $(this).closest('.checkbox-item');
+            const condition = $(this).val();
+            let data = { condition: condition };
+            $item.find('input[type="text"]').each(function () {
+                data[$(this).attr('name')] = $(this).val();
+            });
+            return data;
+        }).get(),
+
+        // Dietary Habits
+        dietary: $('.dietary-checkbox').map(function () {
+            if (!$(this).is(':checked')) return null;
+            const $item = $(this).closest('.checkbox-item');
+            const condition = $(this).attr('id');
+            let data = { condition: condition };
+            $item.find('input[type="text"]').each(function () {
+                data[$(this).attr('name')] = $(this).val();
+            });
+            return data;
+        }).get().filter(Boolean), // remove nulls   
+
+        // Oral Health
+        oralCheck: getOralHealthChecks(),
+        oralNumbers: getOralHealthNumbers()
+
+    };
+}
 
 // =========================
 // Function to collect form data
@@ -292,8 +307,6 @@ function clearWaiverForm() {
 }
 
 
-
-
 function clearDentalForm() {
     // Clear vitals
     $('#bp, #pulse, #temp, #weight').val('');
@@ -324,68 +337,6 @@ function clearDentalForm() {
 
     // Optional: reset any hidden fields or JSON storage
     $('#oralCheckJSON, #oralNumbersJSON, #dietaryJSON, #medHistoryJSON').val('');
-}
-
-
-function collectFormData() {
-    return {
-        hpatcode: $('#hpatcode').val(), // <- added this
-        // Basic Information
-        surname: $('input[name="surname"]').val(),
-        firstName: $('input[name="firstName"]').val(),
-        middleInitial: $('input[name="middleInitial"]').val(),
-        dob: $('input[name="dob"]').val(),
-        age: $('input[name="age"]').val(),
-        sex: $('select[name="sex"]').val(),
-        status: $('select[name="status"]').val(),
-        placeOfBirth: $('input[name="placeOfBirth"]').val(),
-        address: $('input[name="address"]').val(),
-        occupation: $('input[name="occupation"]').val(),
-        parentGuardian: $('input[name="parentGuardian"]').val(),
-
-        // Membership / IDs
-        nhts: $('#nhts').is(':checked'),
-        p4ps: $('#4ps').is(':checked'),
-        ip: $('#ip').is(':checked'),
-        pwd: $('#pwd').is(':checked'),
-        philhealth: $('#philhealth').val(),
-        sss: $('#sss').val(),
-        gsis: $('#gsis').val(),
-
-        // Vital Signs
-        bp: $('#bp').val(),
-        pulse: $('#pulse').val(),
-        temp: $('#temp').val(),
-        weight: $('#weight').val(),
-
-        // Medical History
-        medHistory: $('.med-history-checkboxes:checked').map(function () {
-            const $item = $(this).closest('.checkbox-item');
-            const condition = $(this).val();
-            let data = { condition: condition };
-            $item.find('input[type="text"]').each(function () {
-                data[$(this).attr('name')] = $(this).val();
-            });
-            return data;
-        }).get(),
-
-        // Dietary Habits
-        dietary: $('.dietary-checkbox').map(function () {
-            if (!$(this).is(':checked')) return null;
-            const $item = $(this).closest('.checkbox-item');
-            const condition = $(this).attr('id');
-            let data = { condition: condition };
-            $item.find('input[type="text"]').each(function () {
-                data[$(this).attr('name')] = $(this).val();
-            });
-            return data;
-        }).get().filter(Boolean), // remove nulls   
-
-        // Oral Health
-        oralCheck: getOralHealthChecks(),
-        oralNumbers: getOralHealthNumbers()
-
-    };
 }
 
 
@@ -423,45 +374,45 @@ $(document).ready(function () {
         const formData = collectFormData();
         console.log('Saving form data:', formData);
 
-        $.ajax({
-            url: '../assets/php/save_dental_patient.php', // new endpoint
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-                console.log(response)
-                let res = typeof response === 'string' ? JSON.parse(response) : response;
+        // $.ajax({
+        //     url: '../assets/php/save_dental_patient.php', // new endpoint
+        //     type: 'POST',
+        //     data: formData,
+        //     success: function (response) {
+        //         console.log(response)
+        //         let res = typeof response === 'string' ? JSON.parse(response) : response;
 
-                if(res.success){
-                    // Store globally
-                    window.savedPatientId = res.patient_id;
-                    window.savedHpatcode = res.hpatcode;
-                    console.log(window.savedPatientId)
-                    console.log(window.savedHpatcode)
+        //         if(res.success){
+        //             // Store globally
+        //             window.savedPatientId = res.patient_id;
+        //             window.savedHpatcode = res.hpatcode;
+        //             console.log(window.savedPatientId)
+        //             console.log(window.savedHpatcode)
 
-                    // Show confirmation modal
-                    $('#saveSuccessModal').modal('show');
-                    // clearForm()
-                    // Hide generate until waiver is done
-                    $('#btnGeneratePDF').hide();
+        //             // Show confirmation modal
+        //             $('#saveSuccessModal').modal('show');
+        //             // clearForm()
+        //             // Hide generate until waiver is done
+        //             $('#btnGeneratePDF').hide();
 
-                    // Reset modal buttons
-                    $('#btnOpenWaiver').prop('disabled', false);
-                    $('#btnGenerateAfterWaiver').addClass('d-none');
+        //             // Reset modal buttons
+        //             $('#btnOpenWaiver').prop('disabled', false);
+        //             $('#btnGenerateAfterWaiver').addClass('d-none');
 
-                    $('#saveSuccessModal').modal('show');
+        //             $('#saveSuccessModal').modal('show');
 
-                    // Hide and reset buttons
-                    // $('#btnGeneratePDF').hide();
-                    $('#btnSaveData').prop('disabled', true);
+        //             // Hide and reset buttons
+        //             // $('#btnGeneratePDF').hide();
+        //             $('#btnSaveData').prop('disabled', true);
 
-                } else {
-                    alert(res.message || 'Save failed.');
-                }
-            }, 
-            error: function () {
-                alert('Failed to save data');
-            }
-        });
+        //         } else {
+        //             alert(res.message || 'Save failed.');
+        //         }
+        //     }, 
+        //     error: function () {
+        //         alert('Failed to save data');
+        //     }
+        // });
     });
 
     $('#btnOpenWaiver').on('click', function(){
@@ -651,9 +602,6 @@ $(document).ready(function () {
         }
     });
 
-    function escapeQuotes(str){
-        return str?.replace(/'/g, "&apos;") ?? '';
-    }
 
     $('#btnSearchPatient').on('click', function(){
         let searchValue = $('#patientSearchInput').val().trim();
@@ -807,7 +755,8 @@ $(document).ready(function () {
             $('#weight').val(dental.weight);
 
             // Fill dietary habits
-            const dietary = JSON.parse(dental.dietary || '[]');
+            // Use directly, no JSON.parse
+            const dietary = dental.dietary || [];
             dietary.forEach(item => {
                 const checkbox = $(`#${item.condition}`);
                 if(checkbox.length) checkbox.prop('checked', true);
@@ -819,8 +768,8 @@ $(document).ready(function () {
                 });
             });
 
-            // Fill medical history
-            const medHistory = JSON.parse(dental.med_history || '[]');
+            // Medical history
+            const medHistory = dental.med_history || [];
             medHistory.forEach(item => {
                 const checkbox = $(`.med-history-checkboxes[value="${item.condition}"]`);
                 if(checkbox.length) checkbox.prop('checked', true);
@@ -831,37 +780,33 @@ $(document).ready(function () {
                 });
             });
 
-            // Oral health (Section A)
-            const oralCheck = JSON.parse(dental.oral_check || '[]');
+            // Oral health Section A
+            const oralCheck = dental.oral_check || [];
             if(oralCheck.length) {
                 $('#ohc-a-table tbody tr').each(function(i){
                     if(i === 0) return; // skip date row
                     const $td = $(this).find('td').eq(1);
                     const $checkboxes = $td.find('input[type="checkbox"]');
-                    // Set date
-                    $('#ohc-a-table tbody tr')
-                        .first()
-                        .find('td')
-                        .eq(1)
-                        .find('input[type="date"]')
-                        .val(oralCheck[0]);
 
-
-                    if($checkboxes.length === 2) {
+                    if($checkboxes.length === 2){
                         $checkboxes.eq(0).prop('checked', oralCheck[i] === true || oralCheck[i] === 'true');
                         $checkboxes.eq(1).prop('checked', oralCheck[i] === false || oralCheck[i] === 'false');
                     }
                 });
+
+                // Set the date for first row
+                $('#ohc-a-table tbody tr').first().find('td').eq(1).find('input[type="date"]').val(oralCheck[0]);
             }
 
-            // Oral health numbers (Section B)
-            const oralNumbers = JSON.parse(dental.oral_numbers || '[]');
+            // Oral health numbers Section B
+            const oralNumbers = dental.oral_numbers || [];
             if(oralNumbers.length) {
                 $('.oral-health-table').last().find('tbody tr').each(function(i){
                     const $input = $(this).find('td').eq(1).find('input[type="number"]');
                     if($input.length) $input.val(oralNumbers[i] || 0);
                 });
             }
+
 
             // Fill parent/guardian
             $('#parentGuardian').val(dental.parent_guardian);

@@ -3,11 +3,10 @@ include('../connection/connection.php'); // adjust path if needed
 header('Content-Type: application/json');
 
 try {
-
     // ==========================
     // Collect & sanitize inputs
     // ==========================
-    $hpatcode = $_POST['hpatcode'] ?? '';
+    $hpatcode       = $_POST['hpatcode'] ?? '';
     $surname        = $_POST['surname'] ?? '';
     $firstName      = $_POST['firstName'] ?? '';
     $middleInitial  = $_POST['middleInitial'] ?? '';
@@ -29,6 +28,7 @@ try {
     $sss        = $_POST['sss'] ?? '';
     $gsis       = $_POST['gsis'] ?? '';
 
+    // Visit-specific data
     $bp     = $_POST['bp'] ?? '';
     $pulse  = $_POST['pulse'] ?? '';
     $temp   = $_POST['temp'] ?? '';
@@ -41,31 +41,47 @@ try {
     $oralNumbers = isset($_POST['oralNumbers']) ? json_encode($_POST['oralNumbers'], JSON_UNESCAPED_UNICODE) : json_encode([]);
 
     // ==========================
-    // Insert Query
+    // Insert or update patient
     // ==========================
-
-    $sql = "
+    $stmt = $pdo->prepare("
         INSERT INTO dental_patients (
             hpatcode, surname, first_name, middle_initial, dob, age, sex, status,
             place_of_birth, address, occupation, parent_guardian,
             nhts, p4ps, ip, pwd,
             philhealth, sss, gsis,
-            bp, pulse, temp, weight,
-            med_history, dietary, oral_check, oral_numbers
+            med_history, dietary
         ) VALUES (
             :hpatcode, :surname, :first_name, :middle_initial, :dob, :age, :sex, :status,
             :place_of_birth, :address, :occupation, :parent_guardian,
             :nhts, :p4ps, :ip, :pwd,
             :philhealth, :sss, :gsis,
-            :bp, :pulse, :temp, :weight,
-            :med_history, :dietary, :oral_check, :oral_numbers
+            :med_history, :dietary
         )
-    ";
-
-    $stmt = $pdo->prepare($sql);
+        ON DUPLICATE KEY UPDATE
+            surname = VALUES(surname),
+            first_name = VALUES(first_name),
+            middle_initial = VALUES(middle_initial),
+            dob = VALUES(dob),
+            age = VALUES(age),
+            sex = VALUES(sex),
+            status = VALUES(status),
+            place_of_birth = VALUES(place_of_birth),
+            address = VALUES(address),
+            occupation = VALUES(occupation),
+            parent_guardian = VALUES(parent_guardian),
+            nhts = VALUES(nhts),
+            p4ps = VALUES(p4ps),
+            ip = VALUES(ip),
+            pwd = VALUES(pwd),
+            philhealth = VALUES(philhealth),
+            sss = VALUES(sss),
+            gsis = VALUES(gsis),
+            med_history = VALUES(med_history),
+            dietary = VALUES(dietary)
+    ");
 
     $stmt->execute([
-        ':hpatcode'       => $hpatcode,    // <- pass it here
+        ':hpatcode'       => $hpatcode,
         ':surname'        => $surname,
         ':first_name'     => $firstName,
         ':middle_initial' => $middleInitial,
@@ -84,54 +100,56 @@ try {
         ':philhealth'     => $philhealth,
         ':sss'            => $sss,
         ':gsis'           => $gsis,
-        ':bp'             => $bp,
-        ':pulse'          => $pulse,
-        ':temp'           => $temp,
-        ':weight'         => $weight,
         ':med_history'    => $medHistory,
-        ':dietary'        => $dietary,
-        ':oral_check'     => $oralCheck,
-        ':oral_numbers'   => $oralNumbers
+        ':dietary'        => $dietary
     ]);
 
-    // If inserted, this returns new ID
-    $lastId = $pdo->lastInsertId();
+    // Get patient_id from dental_patients
+    $stmt = $pdo->prepare("SELECT patient_id FROM dental_patients WHERE hpatcode = :hpatcode");
+    $stmt->execute([':hpatcode' => $hpatcode]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $patientId = $row['patient_id'] ?? null;
 
-    // If updated (duplicate key), fetch existing ID
-    if ($lastId == 0) {
-        $getId = $pdo->prepare("SELECT patient_id FROM dental_patients WHERE hpatcode = :hpatcode");
-        $getId->execute([':hpatcode' => $hpatcode]);
-        $row = $getId->fetch(PDO::FETCH_ASSOC);
-        $lastId = $row['patient_id'] ?? null;
+    // ==========================
+    // Insert dental visit if data exists
+    // ==========================
+    $visitId = null;
+    if (!empty($_POST['oralCheck']) || !empty($_POST['oralNumbers']) || !empty($bp)) {
+        $stmt = $pdo->prepare("
+            INSERT INTO dental_visits (
+                hpatcode, visit_date,
+                bp, pulse, temp, weight,
+                oral_check, oral_numbers
+            ) VALUES (
+                :hpatcode, NOW(),
+                :bp, :pulse, :temp, :weight,
+                :oral_check, :oral_numbers
+            )
+        ");
+        $stmt->execute([
+            ':hpatcode'     => $hpatcode,
+            ':bp'           => $bp,
+            ':pulse'        => $pulse,
+            ':temp'         => $temp,
+            ':weight'       => $weight,
+            ':oral_check'   => $oralCheck,
+            ':oral_numbers' => $oralNumbers
+        ]);
+
+        $visitId = $pdo->lastInsertId();
     }
 
-
     echo json_encode([
-        'success' => true,
-        'patient_id' => $lastId,
-        'hpatcode' => $hpatcode,
-        'message' => 'Patient data saved successfully.'
+        'success'    => true,
+        'patient_id' => $patientId,
+        'hpatcode'   => $hpatcode,
+        'visit_id'   => $visitId,
+        'message'    => 'Patient and visit data saved successfully.'
     ]);
 
 } catch (PDOException $e) {
-
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
 }
-
-// try{
-//     echo json_encode([
-//         'success' => true,
-//         'patient_id' => 13,
-//         'hpatcode' => "H-2026-000054",
-//         'message' => 'Patient data saved successfully.'
-//     ]);
-// }catch(PDOException $e){
-//     echo json_encode([
-//         'success' => false,
-//         'message' => $e->getMessage()
-//     ]);
-// }
-
