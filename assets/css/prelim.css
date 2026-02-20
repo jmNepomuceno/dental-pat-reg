@@ -604,3 +604,10 @@ input, select {
         transform: scale(1);
     }
 }
+
+
+.dcc-form{
+    width:100%;
+    text-align: right;
+    font-weight: bold;
+}

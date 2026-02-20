@@ -541,7 +541,7 @@
                         B. Indicate Number
                     </div>
 
-                    <table class="table oral-health-table">
+                    <table class="table oral-health-table" id="ohc-b-table">
                         <colgroup>
                             <col style="width: 40%">
                             <col style="width: 12%">
@@ -663,13 +663,15 @@
                         </tbody>
 
                     </table>
+
+                    <div class="dcc-form">DEN-F-10-00</div>
                 </div>
 
 
                 
                 <div style="text-align:right; margin-top:20px;" id="pdfActionWrapper">
-                    <!-- <button id="btnGenerateAfterWaiver" class="btn-pdf" style="display:none;"> -->
-                    <button id="btnGenerateAfterWaiver" class="btn-pdf" >
+                    <button id="btnGeneratePDF" class="btn-pdf" style="display:none;">
+                    <!-- <button id="btnGenerateAfterWaiver" class="btn-pdf" > -->
                         Generate Printable PDF
                     </button>
                     <button id="btnSaveData" class="btn-pdf">
@@ -976,7 +978,8 @@
                         <input type="hidden" name="waiverHpatcode" id="waiverHpatcode">
 
                     </div>
-
+                    <div class="dcc-form">DEN-F-11-01</div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
@@ -1013,7 +1016,7 @@
                         Complete Waiver
                     </button>
 
-                    <button type="button" class="btn btn-success d-none" id="btnGenerateAfterWaiver">
+                    <button type="button" class="btn btn-success " id="btnGenerateAfterWaiver">
                         Generate PDF Treatment Record
                     </button>
                 </div>

@@ -29,8 +29,19 @@ foreach ($dietary as $item) {
         $dietaryData[$item['condition']] = $item;
     }
 }
-$oralCheck   = $_POST['oralCheck']   ?? [];
-$oralNumbers = $_POST['oralNumbers'] ?? [];
+
+$oralCheck   = $_POST['oralCheck2D']   ?? [];
+$oralNumbers = $_POST['oralNumbers2D'] ?? [];
+
+$oralCheck   = isset($_POST['oralCheck2D']) 
+    ? json_decode($_POST['oralCheck2D'], true) 
+    : [];
+
+$oralNumbers = isset($_POST['oralNumbers2D']) 
+    ? json_decode($_POST['oralNumbers2D'], true) 
+    : [];
+
+
 
 /* ===== Section A rows ===== */
 $conditions = [
@@ -120,7 +131,8 @@ $pdf->SetCreator('BGHMC System');
 $pdf->SetAuthor('BGHMC');
 $pdf->SetTitle('Individual Patient Treatment Record');
 
-$pdf->SetFont('dejavusans', '', 10); // use DejaVu Sans for Unicode
+$pdf->SetFont('dejavusans', '', 9);
+
 
 $pdf->SetMargins(10, 10, 10);
 $pdf->SetAutoPageBreak(true, 10);
@@ -128,9 +140,9 @@ $pdf->AddPage();
 
 // Coordinates
 $xLeftLogo  = 15;  // X position of left logo
-$yLogo      = 20;  // Y position for both logos
-$logoWidth  = 25;  // width of logo
-$logoHeight = 25;  // height of logo
+$yLogo      = 13;  // Y position for both logos
+$logoWidth  = 15;  // width of logo
+$logoHeight = 15;  // height of logo
 
 // Add left logo
 $pdf->Image($dohLogo, $xLeftLogo, $yLogo, $logoWidth, $logoHeight);
@@ -142,18 +154,9 @@ $pdf->Image($bghmcLogo, $xRightLogo, $yLogo, $logoWidth, $logoHeight);
 // HTML Layout
 $html = '
     <style>
-        body {
-            font-size: 10pt;
-            font-family: helvetica;
-        }
-
-        h2, h3 {
-            margin: 2px 0;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
+        body { font-size: 10pt; font-family: helvetica; }
+        h2, h3 { margin: 2px 0; }
+        table { border-collapse: collapse; }
 
         .header-border {
             border-bottom: 2px solid #000;
@@ -173,95 +176,49 @@ $html = '
             padding-bottom: 3px;
         }
 
-        .label {
-            font-size: 9pt;
-            font-weight: bold;
-        }
+        .label { font-size: 9pt; font-weight: bold; }
+        .value { font-size: 10pt; }
 
-        .value {
-            font-size: 10pt;
-        }
-
-         /* ================= ORAL HEALTH TABLES ================= */
         .oral-health-table th,
         .oral-health-table td {
-            font-size: 8pt;        /* smaller font */
-            line-height: 1.2;     /* tighter line spacing */
-            padding: 3px 4px;     /* reduce padding */
+            font-size: 8pt;
+            line-height: 1.2;
+            padding: 3px 4px;
         }
-
-        .oral-health-table th:first-child,
-        .oral-health-table td:first-child {
-            font-size: 8pt;        /* first column label */
-            font-weight: normal;   /* optional, not bold */
-        }
-
 
         .card-membership {
-            padding: 2px;             /* smaller padding */
+            padding: 2px;
             margin-bottom: 4px;
-            font-size: 9pt;           /* shrink text to reduce height */
-        }
-
-        .card-membership .card-title {
-            font-size: 10pt;
-            margin-bottom: 2px;
-            padding-bottom: 2px;
-        }
-
-        .card-membership p,
-        .card-membership table {
-            margin: 0;
-            padding: 0;
-            line-height: 1.0;         /* tight line spacing */
-        }
-
-        .card-membership td {
-            padding: 1px;             /* tiny padding inside cells */
-            line-height: 1.0;
+            font-size: 9pt;
         }
 
         .card-medical-dietary {
             border: 1px solid #000;
-            padding: 4px 6px;       /* smaller padding */
-            margin-bottom: 4px;     /* smaller spacing between these cards only */
-            font-size: 9pt;         /* smaller font */
+            padding: 4px 6px;
+            margin-bottom: 4px;
+            font-size: 9pt;
         }
 
-        .card-medical-dietary .card-title {
-            font-size: 10pt;
-            font-weight: bold;
-            border-bottom: 1px solid #000;
-            margin-bottom: 2px;     /* very compact title spacing */
-            padding-bottom: 2px;
+        #dcc-form{
+            width:100%;
+            text-align:right;
+            font-weight:bold;
         }
-
-        
-        .card-medical-dietary p {
-            margin: 0;
-            padding: 0;
-            line-height: 1.0;       /* tighter line spacing */
-        }
-            
     </style>
 
     <!-- HEADER -->
     <table width="100%" class="header-border">
-        <tr>
-            <td width="15%">
-                <img src="' . $dohLogo . '">
-            </td>
-            <td width="70%" align="center">
-                <p>Republic of the Philippines</p>
-                <p>Department of Health</p>
-                <p>Center for Health Development III</p>
-                <h2>BGHMC BATAAN</h2>
-                <h3>Individual Patient Treatment Record</h3>
-            </td>
-            <td width="15%" align="center">
-                <img src="' . $bghmcLogo . '">
-            </td>
-        </tr>
+    <tr>
+    <td width="15%"><img src="' . $dohLogo . '"></td>
+    <td width="70%" align="center">
+    <span style="font-size:8pt;">Republic of the Philippines</span><br>
+    <span style="font-size:8pt;">Department of Health</span><br>
+    <span style="font-size:8pt;">Center for Health Development III</span><br>
+    <span style="font-size:11pt; font-weight:bold;">BGHMC BATAAN</span><br>
+    <span style="font-size:9pt;">Individual Patient Treatment Record</span>
+    </td>
+    <td width="15%" align="center"><img src="' . $bghmcLogo . '"></td>
+    </tr>
     </table>
 
     <br>
@@ -447,9 +404,18 @@ $html = '
         </p>
     </div>
 
+    ';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    // ================= PUSH SECTION VI DOWN =================
+    $pdf->Ln(15);   // 🔥 15mm ≈ 50px spacing
+
+
+    // ================= SECTION VI ONLY =================
+    $html2 = '
 
     <!-- VI. ORAL HEALTH CONDITION -->
-    <div class="card">
+    <div class="card oral-health-div">
         <div class="card-title">
             VI. Oral Health Condition <br>
             <b>A. Check (✔) if Present, (✖) if Absent</b>
@@ -496,8 +462,14 @@ $html = '
         </table>
     </div>
 
+    <table width="100%">
+        <tr>
+            <td align="right"><b>DEN-F-10-00</b></td>
+        </tr>
+    </table>
+
 ';
 
-$pdf->writeHTML($html, true, false, true, false, '');
+$pdf->writeHTML($html2, true, false, true, false, '');
 $pdf->Output('patient_record.pdf', 'I');
 

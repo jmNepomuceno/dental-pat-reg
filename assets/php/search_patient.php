@@ -14,7 +14,9 @@ $search = trim($_POST['search']);
 
 try {
 
+    // ==============================
     // Fetch main patient info
+    // ==============================
     $sql = "SELECT 
                 h.hpatkey,
                 h.hpatcode,
@@ -40,7 +42,9 @@ try {
     $stmt->execute([':search' => "%$search%"]);
     $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Fetch related data for each patient
+    // ==============================
+    // Fetch related data per patient
+    // ==============================
     foreach ($patients as &$p) {
 
         // Address
@@ -67,7 +71,7 @@ try {
         $family = $stmtFam->fetchAll(PDO::FETCH_ASSOC);
         $p['family'] = [];
         foreach ($family as $f) {
-            $rel = strtolower($f['relation']); // father, mother, guardian
+            $rel = strtolower($f['relation']);
             $p['family'][$rel] = $f;
         }
 
@@ -81,26 +85,47 @@ try {
         $stmtEmp->execute([':hpatkey' => $p['hpatkey']]);
         $p['employment'] = $stmtEmp->fetch(PDO::FETCH_ASSOC);
 
-        // Dental: fetch dental patient and latest visit
-        $stmtDental = $pdo->prepare("
-            SELECT dp.*, dv.visit_id, dv.visit_date, dv.bp, dv.pulse, dv.temp, dv.weight,
-                   dv.oral_check, dv.oral_numbers
-            FROM dental_patients dp
-            LEFT JOIN dental_visits dv ON dp.hpatcode = dv.hpatcode
-            WHERE dp.hpatcode = :hpatcode
-            ORDER BY dv.visit_date DESC
+        // ==============================
+        // Dental Section
+        // ==============================
+
+        // 1️⃣ Fetch dental patient info
+        $stmtDentalPatient = $pdo->prepare("
+            SELECT * FROM dental_patients
+            WHERE hpatcode = :hpatcode
             LIMIT 1
         ");
-        $stmtDental->execute([':hpatcode' => $p['hpatcode']]);
-        $dental = $stmtDental->fetch(PDO::FETCH_ASSOC);
+        $stmtDentalPatient->execute([':hpatcode' => $p['hpatcode']]);
+        $dentalPatient = $stmtDentalPatient->fetch(PDO::FETCH_ASSOC);
 
-        if ($dental) {
-            // Decode JSON columns
-            $dental['oral_check']   = json_decode($dental['oral_check'] ?? '[]', true);
-            $dental['oral_numbers'] = json_decode($dental['oral_numbers'] ?? '[]', true);
-            $dental['med_history']  = json_decode($dental['med_history'] ?? '[]', true);
-            $dental['dietary']      = json_decode($dental['dietary'] ?? '[]', true);
-            $p['dental'] = $dental;
+        if ($dentalPatient) {
+
+            // Decode patient-level JSON fields
+            $dentalPatient['med_history'] = json_decode($dentalPatient['med_history'] ?? '[]', true);
+            $dentalPatient['dietary']     = json_decode($dentalPatient['dietary'] ?? '[]', true);
+
+            // 2️⃣ Fetch ALL dental visits
+            $stmtVisits = $pdo->prepare("
+                SELECT visit_id, visit_date, bp, pulse, temp, weight,
+                       oral_check, oral_numbers
+                FROM dental_visits
+                WHERE hpatcode = :hpatcode
+                ORDER BY visit_date
+            ");
+            $stmtVisits->execute([':hpatcode' => $p['hpatcode']]);
+            $visits = $stmtVisits->fetchAll(PDO::FETCH_ASSOC);
+
+            // Decode visit JSON fields
+            foreach ($visits as &$v) {
+                $v['oral_check']   = json_decode($v['oral_check'] ?? '[]', true);
+                $v['oral_numbers'] = json_decode($v['oral_numbers'] ?? '[]', true);
+            }
+
+            $p['dental'] = [
+                'patient_info' => $dentalPatient,
+                'visits'       => $visits
+            ];
+
         } else {
             $p['dental'] = null;
         }

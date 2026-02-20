@@ -41,68 +41,117 @@ try {
     $oralNumbers = isset($_POST['oralNumbers']) ? json_encode($_POST['oralNumbers'], JSON_UNESCAPED_UNICODE) : json_encode([]);
 
     // ==========================
-    // Insert or update patient
+    // Check if patient exists
     // ==========================
-    $stmt = $pdo->prepare("
-        INSERT INTO dental_patients (
-            hpatcode, surname, first_name, middle_initial, dob, age, sex, status,
-            place_of_birth, address, occupation, parent_guardian,
-            nhts, p4ps, ip, pwd,
-            philhealth, sss, gsis,
-            med_history, dietary
-        ) VALUES (
-            :hpatcode, :surname, :first_name, :middle_initial, :dob, :age, :sex, :status,
-            :place_of_birth, :address, :occupation, :parent_guardian,
-            :nhts, :p4ps, :ip, :pwd,
-            :philhealth, :sss, :gsis,
-            :med_history, :dietary
-        )
-        ON DUPLICATE KEY UPDATE
-            surname = VALUES(surname),
-            first_name = VALUES(first_name),
-            middle_initial = VALUES(middle_initial),
-            dob = VALUES(dob),
-            age = VALUES(age),
-            sex = VALUES(sex),
-            status = VALUES(status),
-            place_of_birth = VALUES(place_of_birth),
-            address = VALUES(address),
-            occupation = VALUES(occupation),
-            parent_guardian = VALUES(parent_guardian),
-            nhts = VALUES(nhts),
-            p4ps = VALUES(p4ps),
-            ip = VALUES(ip),
-            pwd = VALUES(pwd),
-            philhealth = VALUES(philhealth),
-            sss = VALUES(sss),
-            gsis = VALUES(gsis),
-            med_history = VALUES(med_history),
-            dietary = VALUES(dietary)
-    ");
+    $checkStmt = $pdo->prepare("SELECT patient_id FROM dental_patients WHERE hpatcode = :hpatcode");
+    $checkStmt->execute([':hpatcode' => $hpatcode]);
+    $existingPatient = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-    $stmt->execute([
-        ':hpatcode'       => $hpatcode,
-        ':surname'        => $surname,
-        ':first_name'     => $firstName,
-        ':middle_initial' => $middleInitial,
-        ':dob'            => $dob,
-        ':age'            => $age,
-        ':sex'            => $sex,
-        ':status'         => $status,
-        ':place_of_birth' => $placeOfBirth,
-        ':address'        => $address,
-        ':occupation'     => $occupation,
-        ':parent_guardian'=> $parentGuardian,
-        ':nhts'           => $nhts,
-        ':p4ps'           => $p4ps,
-        ':ip'             => $ip,
-        ':pwd'            => $pwd,
-        ':philhealth'     => $philhealth,
-        ':sss'            => $sss,
-        ':gsis'           => $gsis,
-        ':med_history'    => $medHistory,
-        ':dietary'        => $dietary
-    ]);
+    if ($existingPatient) {
+
+        // ==========================
+        // UPDATE existing patient
+        // ==========================
+        $stmt = $pdo->prepare("
+            UPDATE dental_patients SET
+                surname = :surname,
+                first_name = :first_name,
+                middle_initial = :middle_initial,
+                dob = :dob,
+                age = :age,
+                sex = :sex,
+                status = :status,
+                place_of_birth = :place_of_birth,
+                address = :address,
+                occupation = :occupation,
+                parent_guardian = :parent_guardian,
+                nhts = :nhts,
+                p4ps = :p4ps,
+                ip = :ip,
+                pwd = :pwd,
+                philhealth = :philhealth,
+                sss = :sss,
+                gsis = :gsis,
+                med_history = :med_history,
+                dietary = :dietary,
+                updated_at = NOW()
+            WHERE hpatcode = :hpatcode
+        ");
+
+        $stmt->execute([
+            ':hpatcode'       => $hpatcode,
+            ':surname'        => $surname,
+            ':first_name'     => $firstName,
+            ':middle_initial' => $middleInitial,
+            ':dob'            => $dob,
+            ':age'            => $age,
+            ':sex'            => $sex,
+            ':status'         => $status,
+            ':place_of_birth' => $placeOfBirth,
+            ':address'        => $address,
+            ':occupation'     => $occupation,
+            ':parent_guardian'=> $parentGuardian,
+            ':nhts'           => $nhts,
+            ':p4ps'           => $p4ps,
+            ':ip'             => $ip,
+            ':pwd'            => $pwd,
+            ':philhealth'     => $philhealth,
+            ':sss'            => $sss,
+            ':gsis'           => $gsis,
+            ':med_history'    => $medHistory,
+            ':dietary'        => $dietary
+        ]);
+
+        $patientId = $existingPatient['patient_id'];
+
+    } else {
+
+        // ==========================
+        // INSERT new patient
+        // ==========================
+        $stmt = $pdo->prepare("
+            INSERT INTO dental_patients (
+                hpatcode, surname, first_name, middle_initial, dob, age, sex, status,
+                place_of_birth, address, occupation, parent_guardian,
+                nhts, p4ps, ip, pwd,
+                philhealth, sss, gsis,
+                med_history, dietary
+            ) VALUES (
+                :hpatcode, :surname, :first_name, :middle_initial, :dob, :age, :sex, :status,
+                :place_of_birth, :address, :occupation, :parent_guardian,
+                :nhts, :p4ps, :ip, :pwd,
+                :philhealth, :sss, :gsis,
+                :med_history, :dietary
+            )
+        ");
+
+        $stmt->execute([
+            ':hpatcode'       => $hpatcode,
+            ':surname'        => $surname,
+            ':first_name'     => $firstName,
+            ':middle_initial' => $middleInitial,
+            ':dob'            => $dob,
+            ':age'            => $age,
+            ':sex'            => $sex,
+            ':status'         => $status,
+            ':place_of_birth' => $placeOfBirth,
+            ':address'        => $address,
+            ':occupation'     => $occupation,
+            ':parent_guardian'=> $parentGuardian,
+            ':nhts'           => $nhts,
+            ':p4ps'           => $p4ps,
+            ':ip'             => $ip,
+            ':pwd'            => $pwd,
+            ':philhealth'     => $philhealth,
+            ':sss'            => $sss,
+            ':gsis'           => $gsis,
+            ':med_history'    => $medHistory,
+            ':dietary'        => $dietary
+        ]);
+
+        $patientId = $pdo->lastInsertId();
+    }
+
 
     // Get patient_id from dental_patients
     $stmt = $pdo->prepare("SELECT patient_id FROM dental_patients WHERE hpatcode = :hpatcode");
