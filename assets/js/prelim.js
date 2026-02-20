@@ -1187,6 +1187,7 @@ $(document).ready(function () {
 
         // Show Generate PDF button when patient is loaded
         $('#btnGeneratePDF').show();
+        $('#btnViewWaiver').show();
 
         // Enable Save button now that a patient is selected
         $('#btnSaveData').prop('disabled', false);

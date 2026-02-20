@@ -299,6 +299,11 @@ input, select {
     border-color: #0056b3;
 }
 
+#btnViewWaiver:hover{
+    background: #e6ac00;
+    border-color: #e6ac00;
+}
+
 .btn-pdf:disabled,
 .btn-pdf.disabled {
     background: #e0e0e0;

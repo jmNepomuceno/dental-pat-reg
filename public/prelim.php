@@ -669,15 +669,39 @@
 
 
                 
-                <div style="text-align:right; margin-top:20px;" id="pdfActionWrapper">
+                <!-- <div style="text-align:right; margin-top:20px;" id="pdfActionWrapper">
+                    <button id="btnViewWaiver" class="btn-pdf" style="display:none;">
+                        View Waiver
+                    </button>
+
                     <button id="btnGeneratePDF" class="btn-pdf" style="display:none;">
-                    <!-- <button id="btnGenerateAfterWaiver" class="btn-pdf" > -->
                         Generate Printable PDF
                     </button>
+
                     <button id="btnSaveData" class="btn-pdf">
                         Save
                     </button>
+                </div> -->
+
+                <div id="pdfActionWrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                    <!-- Left side -->
+                    <div>
+                        <button id="btnViewWaiver" class="btn-pdf" style="background-color: #FFC107; color:#000; display:inline-block; border: 1px solid #FFC107;">
+                            View Waiver
+                        </button>
+                    </div>
+
+                    <!-- Right side -->
+                    <div>
+                        <button id="btnGeneratePDF" class="btn-pdf" style="display:inline-block; margin-right:5px;">
+                            Generate Printable PDF
+                        </button>
+                        <button id="btnSaveData" class="btn-pdf " style="display:inline-block;">
+                            Save
+                        </button>
+                    </div>
                 </div>
+
 
             </div>
         </div>
@@ -979,7 +1003,7 @@
 
                     </div>
                     <div class="dcc-form">DEN-F-11-01</div>
-                    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
